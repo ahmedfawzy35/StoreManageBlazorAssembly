@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace StoreManage.Shared.Models
+{
+    public partial class CustomerDiscountSettlement
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public double Value { get; set; }
+        public string? Notes { get; set; }
+        public int CustomerId { get; set; }
+        public int UserId { get; set; }
+        public int BrancheId { get; set; }
+
+        public virtual Branch Branche { get; set; } = null!;
+        public virtual Customer Customer { get; set; } = null!;
+        public virtual User User { get; set; } = null!;
+    }
+}

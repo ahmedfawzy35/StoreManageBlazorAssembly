@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace StoreManage.Shared.Models
+{
+    public partial class PurchaseBack
+    {
+        public PurchaseBack()
+        {
+            PurchaseBackDetails = new HashSet<PurchaseBackDetail>();
+        }
+
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public int SellerId { get; set; }
+        public double Total { get; set; }
+        public double Paid { get; set; }
+        public double Discount { get; set; }
+        public double RemainingAmount { get; set; }
+        public int BrancheId { get; set; }
+        public string? Notes { get; set; }
+        public int OrderNumber { get; set; }
+        public double OrderProfit { get; set; }
+        public DateTime? DateDeleted { get; set; }
+        public int EditCount { get; set; }
+        public int? IdUserDeleIt { get; set; }
+        public bool? IsDeleted { get; set; }
+        public bool? IsEdit { get; set; }
+
+        public virtual Branch Branche { get; set; } = null!;
+        public virtual Seller Seller { get; set; } = null!;
+        public virtual ICollection<PurchaseBackDetail> PurchaseBackDetails { get; set; }
+    }
+}
