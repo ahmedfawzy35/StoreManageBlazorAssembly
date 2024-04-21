@@ -11,39 +11,56 @@ namespace StoreManage.Server.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly ICustomerRepository _customer;
+        private readonly IUnitOfWork _customer;
 
-        public CustomerController(ICustomerRepository customer)
+        public CustomerController(IUnitOfWork customer)
         {
             _customer = customer;
         }
         // GET: api/<CustomerController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult  GetAll()
         {
-            return new string[] { "value1", "value2" };
+            var cus = _customer.Customer.GetAll();
+            return Ok(cus);
         }
 
      
         // GET api/<CustomerController>/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult GetById(int id)
         {
-            var cus = _customer.GetById(id);
+            var cus = _customer.Customer.GetById(id);
             return Ok(cus);
         }
         // GET api/<CustomerController>/5
         [HttpGet]
-        public IActionResult Search([FromBody] string name)
+        public async Task< IActionResult> Search([FromBody] string name)
         {
-            var cus = _customer.SearchName(name, 4);
+            var cus = await _customer.Customer.FindAllAsync(x=>x.Name.Contains(name));
             return Ok(cus);
         }
 
         // POST api/<CustomerController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Add([FromBody] Customer model)
         {
+            if (ModelState.IsValid)
+            {
+                _customer.Customer.Add(model);
+                var result = _customer.Complete();
+                if (result > 0)
+                {
+                    return Ok("add successfuly !!");
+                }
+                else
+                {
+                    return BadRequest("faild to add");
+                }
+            }
+            else
+                return BadRequest("faild to add");
+
         }
 
         // PUT api/<CustomerController>/5
