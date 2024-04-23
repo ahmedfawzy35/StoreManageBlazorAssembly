@@ -16,7 +16,7 @@ namespace StoreManage.Server.Servicies.Repositories
             _context = context;
 
             Catogry = new BaseRepository<Catogry>(_context);
-            Customer = new CustomerRepository(_context);
+            Customer = new CustomerRepository(_context );
         }
 
         public int Complete()
