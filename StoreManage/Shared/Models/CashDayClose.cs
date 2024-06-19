@@ -18,7 +18,7 @@ namespace StoreManage.Shared.Models
         public int BrancheId { get; set; }
         public DateTime DayCloseDate { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual Employee ResposibleEmployee { get; set; } = null!;
         public virtual User User { get; set; } = null!;
     }

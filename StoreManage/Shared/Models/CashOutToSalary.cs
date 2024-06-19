@@ -20,7 +20,7 @@ namespace StoreManage.Shared.Models
         public bool? IsEdit { get; set; }
         public DateTime Date { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual Employee Employee { get; set; } = null!;
         public virtual User User { get; set; } = null!;
     }

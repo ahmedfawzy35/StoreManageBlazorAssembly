@@ -21,7 +21,7 @@ namespace StoreManage.Shared.Models
         public double StartAccount { get; set; }
         public int BrancheId { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual ICollection<CashOutToSeller> CashOutToSellers { get; set; }
         public virtual ICollection<PurchaseBack> PurchaseBacks { get; set; }
         public virtual ICollection<Purchase> Purchases { get; set; }

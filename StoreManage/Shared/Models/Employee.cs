@@ -26,7 +26,7 @@ namespace StoreManage.Shared.Models
         public DateTime DateEnd { get; set; }
         public int BrancheId { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual ICollection<CashDayClose> CashDayCloses { get; set; }
         public virtual ICollection<CashOutToAdvancepaymentOfSalary> CashOutToAdvancepaymentOfSalaries { get; set; }
         public virtual ICollection<CashOutToSalary> CashOutToSalaries { get; set; }

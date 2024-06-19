@@ -26,7 +26,7 @@ namespace StoreManage.Shared.Models
         public int NewForeignKey { get; set; }
         public int OldForeignKey { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual User EditUser { get; set; } = null!;
     }
 }

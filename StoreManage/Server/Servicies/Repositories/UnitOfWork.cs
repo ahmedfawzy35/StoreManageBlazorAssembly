@@ -11,12 +11,19 @@ namespace StoreManage.Server.Servicies.Repositories
         public IBaseRepository<Catogry> Catogry { get; private set; }
         public ICustomerRepository Customer { get; private set; }
 
+        public ISellerRepository Seller { get; private set; }
+
+        public IUserRepository User { get; private set; }
+
+
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
 
             Catogry = new BaseRepository<Catogry>(_context);
             Customer = new CustomerRepository(_context );
+            Seller = new SellerRepository(_context );
+            User = new UserRepository(_context );
         }
 
         public int Complete()

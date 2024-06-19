@@ -17,7 +17,7 @@ namespace StoreManage.Shared.Models
         public double StartAccount { get; set; }
         public int BrancheId { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual ICollection<CashInFromBrancheMoneySafe> CashInFromBrancheMoneySaves { get; set; }
         public virtual ICollection<CashOutToBrancheMoneySafe> CashOutToBrancheMoneySaves { get; set; }
     }

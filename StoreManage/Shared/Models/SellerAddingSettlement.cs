@@ -13,7 +13,7 @@ namespace StoreManage.Shared.Models
         public int UserId { get; set; }
         public int BrancheId { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual Seller Seller { get; set; } = null!;
         public virtual User User { get; set; } = null!;
     }

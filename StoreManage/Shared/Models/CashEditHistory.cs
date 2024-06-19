@@ -23,7 +23,7 @@ namespace StoreManage.Shared.Models
         public DateTime? NewDueDate { get; set; }
         public DateTime? OldDueDate { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual User EditUser { get; set; } = null!;
     }
 }

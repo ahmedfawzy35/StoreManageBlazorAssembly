@@ -18,7 +18,7 @@ namespace StoreManage.Shared.Models
         public bool IsDeleted { get; set; }
         public bool? IsEdit { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual InCome InCome { get; set; } = null!;
         public virtual User User { get; set; } = null!;
     }

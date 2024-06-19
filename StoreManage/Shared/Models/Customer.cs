@@ -24,7 +24,7 @@ namespace StoreManage.Shared.Models
         public bool? StopDealing { get; set; }
 
      
-        public virtual Branch? Branche { get; set; } = null!;
+        public virtual Branche? Branche { get; set; } = null!;
         public virtual CustomerType? Customertype { get; set; } = null!;
         public virtual ICollection<CashInFromCustomer> CashInFromCustomers { get; set; }
         public virtual ICollection<CustomerAddingSettlement> CustomerAddingSettlements { get; set; }

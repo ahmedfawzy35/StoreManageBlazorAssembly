@@ -7,6 +7,9 @@ namespace StoreManage.Server.Servicies.Interfacies
 
         IBaseRepository<Catogry> Catogry { get; }
         ICustomerRepository Customer { get; }
+        ISellerRepository Seller { get; }
+        IUserRepository User { get; }
+
         int Complete();
     }
 }

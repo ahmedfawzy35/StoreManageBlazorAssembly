@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace StoreManage.Shared.Models
 {
-    public partial class Branch
+    public partial class Branche
     {
-        public Branch()
+        public Branche()
         {
             BrancheMoneySaves = new HashSet<BrancheMoneySafe>();
             CashDayCloses = new HashSet<CashDayClose>();

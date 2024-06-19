@@ -21,7 +21,7 @@ namespace StoreManage.Shared.Models
         public double NewDiscount { get; set; }
         public int NewProductId { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual User EditUser { get; set; } = null!;
     }
 }

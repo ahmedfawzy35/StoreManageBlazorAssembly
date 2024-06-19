@@ -6,6 +6,10 @@ namespace StoreManage.Server.Data
 {
     public class AppDbContext : DbContext
     {
+
+        // monstre asp account 
+        // 9583
+        //http://alfathstore.runasp.net/api/Seller/Account/
         public AppDbContext()
         {
         }
@@ -16,7 +20,7 @@ namespace StoreManage.Server.Data
         }
 
         public virtual DbSet<BankAccount> BankAccounts { get; set; } = null!;
-        public virtual DbSet<Branch> Branches { get; set; } = null!;
+        public virtual DbSet<Branche> Branches { get; set; } = null!;
         public virtual DbSet<BrancheMoneySafe> BrancheMoneySaves { get; set; } = null!;
         public virtual DbSet<CashDayClose> CashDayCloses { get; set; } = null!;
         public virtual DbSet<CashEditHistory> CashEditHistories { get; set; } = null!;
@@ -69,6 +73,7 @@ namespace StoreManage.Server.Data
         public virtual DbSet<SellerPhone> SellerPhones { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UserRole> UserRoles { get; set; } = null!;
+        public virtual DbSet<UserBranches> UserBranches { get; set; } = null!;
 
       
 

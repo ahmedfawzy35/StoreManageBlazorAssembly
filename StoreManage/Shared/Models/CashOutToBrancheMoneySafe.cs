@@ -18,7 +18,7 @@ namespace StoreManage.Shared.Models
         public int? IdUserDeleIt { get; set; }
         public int BrancheMoneySafeId { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual BrancheMoneySafe BrancheMoneySafe { get; set; } = null!;
         public virtual User User { get; set; } = null!;
     }

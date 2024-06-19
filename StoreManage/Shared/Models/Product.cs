@@ -29,7 +29,7 @@ namespace StoreManage.Shared.Models
         public string? CustomId { get; set; }
         public double Stock { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual Catogry Catogry { get; set; } = null!;
         public virtual ICollection<OrderBackDetail> OrderBackDetails { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

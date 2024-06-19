@@ -15,7 +15,7 @@ namespace StoreManage.Shared.Models
         public string? Notes { get; set; }
         public int BrancheId { get; set; }
 
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual ICollection<CashOutToOutGoing> CashOutToOutGoings { get; set; }
     }
 }

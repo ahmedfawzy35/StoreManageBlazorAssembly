@@ -19,7 +19,7 @@ namespace StoreManage.Shared.Models
         public bool? IsEdit { get; set; }
 
         public virtual BankAccount BanckAccount { get; set; } = null!;
-        public virtual Branch Branche { get; set; } = null!;
+        public virtual Branche Branche { get; set; } = null!;
         public virtual User User { get; set; } = null!;
     }
 }
