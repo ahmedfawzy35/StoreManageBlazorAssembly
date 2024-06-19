@@ -12,7 +12,7 @@ namespace StoreManage.Shared.Dtos.UserDtos
 
         public UserDto? user { get; set; }
         public List<ClimeDto>? Climes { get; set; }
-        public List<UserBranchesDto>? UserBranches { get; set; }
+        public List<BrancheDto>? UserBranches { get; set; }
         public List<BrancheDto>? AllBranches { get; set; }
         public bool Login { get; set; }
         public string? errorMessage { get; set; } 

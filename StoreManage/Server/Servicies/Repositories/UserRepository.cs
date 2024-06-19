@@ -26,7 +26,7 @@ namespace StoreManage.Server.Servicies.Repositories
             {
                 var allBranches = await _context.Branches.ToListAsync();
                 var userRoles =await _context.UserRoles.Where(x=>x.UserId == user.Id).ToListAsync();
-                var userBranches = await _context.UserBranches.Where(x => x.UserId == user.Id).ToListAsync();
+                var userBranches = await _context.UserBranches.Include(b=>b.Branche).Where(x => x.UserId == user.Id).ToListAsync();
                 List<Clime>? climes = new List<Clime>();
                 foreach (var role in userRoles)
                 {
@@ -42,7 +42,7 @@ namespace StoreManage.Server.Servicies.Repositories
                                           EditCount = user.EditCount , FullName = user.FullName , IsDeleted = user.IsDeleted , IsEdit = user.IsEdit };
                 login.Climes = ToClimeDto(climes);
                 login.Login = true;
-                login.UserBranches = ToUserBranchesDto(userBranches);
+                login.UserBranches = ToBranchesDto(userBranches);
                 login.AllBranches = ToBrancheDto(allBranches);
                 return login;
             }
@@ -60,12 +60,12 @@ namespace StoreManage.Server.Servicies.Repositories
 
             return climeDtos;
         }
-        private List<UserBranchesDto> ToUserBranchesDto(List<UserBranches> userBranches)
+        private List<BrancheDto> ToBranchesDto(List<UserBranches> userBranches)
         {
-            List<UserBranchesDto> userBranchesDto = new List<UserBranchesDto>();
+            List<BrancheDto> userBranchesDto = new List<BrancheDto>();
             foreach (var userBranche in userBranches)
             {
-                userBranchesDto.Add(new UserBranchesDto() { Id = userBranche.Id, BrancheId = userBranche.BrancheId, UserId = userBranche.UserId });
+                userBranchesDto.Add(new BrancheDto() { Id = userBranche.Branche.Id, Name = userBranche.Branche.Name});
             }
 
             return userBranchesDto;
@@ -80,5 +80,6 @@ namespace StoreManage.Server.Servicies.Repositories
 
             return brancheDto;
         }
+      
     }
 }
