@@ -11,13 +11,13 @@ namespace StoreManage.Server.Controllers
 
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class OrderController : ControllerBase
+    public class OrderBackController : ControllerBase
     {
-        private readonly IUnitOfWork _order;
+        private readonly IUnitOfWork _orderBack;
 
-        public OrderController(IUnitOfWork order)
+        public OrderBackController(IUnitOfWork orderBack)
         {
-            _order = order;
+            _orderBack = orderBack;
         }
         // GET: api/<OrderController>
 
@@ -25,86 +25,43 @@ namespace StoreManage.Server.Controllers
         [HttpGet]
         public IActionResult GetAll([FromBody] int brancheId)
         {
-            return Ok(_order.Order.GetAllOrders(brancheId));
+            return Ok(_orderBack.OrderBack.GetAllOrdersBack(brancheId));
         }
 
-     
+
         [HttpGet]
         public IActionResult GetAllForDate([FromBody] TimeDto time)
         {
-            return Ok(_order.Order.GetAllForDate(time.DateFrom , time.BrancheId));
+            return Ok(_orderBack.OrderBack.GetAllForDate(time.DateFrom, time.BrancheId));
         }
-          [HttpGet]
-        public IActionResult GetAllForTime([FromBody]TimeDto time)
+        [HttpGet]
+        public IActionResult GetAllForTime([FromBody] TimeDto time)
         {
-            return Ok(_order.Order.GetAllForTime(time.DateFrom , time.DateTo , time.BrancheId));
+            return Ok(_orderBack.OrderBack.GetAllForTime(time.DateFrom, time.DateTo, time.BrancheId));
         }
 
         // GET api/<OrderController>/5
         [HttpGet("{id}")]
         public IActionResult GetbYId(int id)
         {
-            var myorder = _order.Order.GetOrder(id);
+            var myorder = _orderBack.OrderBack.GetOrderBack(id);
             if (myorder.Id != 0)
             {
-               
+
                 return Ok(myorder);
             }
 
 
-            return NotFound("لم يتم ايجاد الفاتورة");
+            return NotFound("لم يتم ايجاد فاتورة المرتجع");
         }
 
         // POST api/<OrderController>
         [HttpPost]
-        public async Task< IActionResult> Add([FromBody] OrderDto model)
+        public async Task<IActionResult> Add([FromBody] OrderDto model)
         {
             if (ModelState.IsValid)
             {
-                var myorder = new Order();
-                myorder.Date = model.Date;
-                myorder.CustomerId = model.CustomerId;
-                myorder.Total = model.Total; 
-                myorder.Paid = model.Paid;
-                myorder.Discount = model.Discount;
-                myorder.RemainingAmount = model.RemainingAmount;
-                myorder.BrancheId = model.BrancheId;
-                myorder.OrderProfit = model.OrderProfit;
-                myorder.OrderNumber = model.OrderNumber;
-                myorder.Notes = model.Notes;
-                try
-                {
-                 myorder =   await _order.Order.AddAsync(myorder);
-                    model.Id = myorder.Id;
-                    _order.Complete();
-                    return Ok(model);
-                }
-                catch (Exception)
-                {
-
-                    return BadRequest($"لم يتم اضاضفة الفاتورة ");
-                }
-             
-            }else
-            {
-                return  BadRequest("البيانات غير مكتملة");
-            }
-        }
-
-        // PUT api/<OrderController>/5
-        [HttpPut("{id}")]
-        public  IActionResult  Edit(int id, [FromBody] OrderDto model)
-        {
-            
-
-            if (ModelState.IsValid)
-            {
-                var myorder =_order.Order.GetById(id);
-                if (myorder == null)
-                {
-                    return BadRequest("لم يتم العثور على الفاتورة ");
-                }
-               
+                var myorder = new OrderBack();
                 myorder.Date = model.Date;
                 myorder.CustomerId = model.CustomerId;
                 myorder.Total = model.Total;
@@ -117,17 +74,61 @@ namespace StoreManage.Server.Controllers
                 myorder.Notes = model.Notes;
                 try
                 {
-                    _order.Order.Update(myorder);
-                    _order.Complete();
+                    myorder = await _orderBack.OrderBack.AddAsync(myorder);
+                    model.Id = myorder.Id;
+                    _orderBack.Complete();
+                    return Ok(model);
+                }
+                catch (Exception)
+                {
+
+                    return BadRequest($"لم يتم اضاضفة فاتورة المرتجع ");
+                }
+
+            }
+            else
+            {
+                return BadRequest("البيانات غير مكتملة");
+            }
+        }
+
+        // PUT api/<OrderController>/5
+        [HttpPut("{id}")]
+        public IActionResult Edit(int id, [FromBody] OrderDto model)
+        {
+
+
+            if (ModelState.IsValid)
+            {
+                var myorder = _orderBack.OrderBack.GetById(id);
+                if (myorder == null)
+                {
+                    return BadRequest("لم يتم العثور على فاتورة المرتجع ");
+                }
+
+                myorder.Date = model.Date;
+                myorder.CustomerId = model.CustomerId;
+                myorder.Total = model.Total;
+                myorder.Paid = model.Paid;
+                myorder.Discount = model.Discount;
+                myorder.RemainingAmount = model.RemainingAmount;
+                myorder.BrancheId = model.BrancheId;
+                myorder.OrderProfit = model.OrderProfit;
+                myorder.OrderNumber = model.OrderNumber;
+                myorder.Notes = model.Notes;
+                try
+                {
+                    _orderBack.OrderBack.Update(myorder);
+                    _orderBack.Complete();
                     model.Id = id;
                     return Ok(model);
                 }
                 catch (Exception)
                 {
 
-                   return BadRequest("فشل تعديل الفاتورة");
+                    return BadRequest("فشل تعديل فاتورة المرتجع");
                 }
-                
+
             }
             else
             {
@@ -141,19 +142,19 @@ namespace StoreManage.Server.Controllers
         {
             try
             {
-                var myorder = _order.Order.GetById(id);
-                if (myorder == null) return BadRequest("لم يتم ايجاد الفاتورة في قاعدة البيانات");
-                _order.Order.Delete(myorder);
-                _order.Complete();
-                return Ok("تم حذف الفاتورة ");
+                var myorder = _orderBack.Order.GetById(id);
+                if (myorder == null) return BadRequest("لم يتم ايجاد فاتورة المرتجع في قاعدة البيانات");
+                _orderBack.Order.Delete(myorder);
+                _orderBack.Complete();
+                return Ok("تم حذف فاتورة المرتجع ");
             }
             catch (Exception)
             {
 
-                return BadRequest("لم يتم حذف الفاتورة ");
+                return BadRequest("لم يتم حذف فاتورة المرتجع ");
             }
         }
 
-     
+
     }
 }

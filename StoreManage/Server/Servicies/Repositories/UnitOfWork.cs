@@ -15,6 +15,7 @@ namespace StoreManage.Server.Servicies.Repositories
 
         public IUserRepository User { get; private set; }
         public IOrderRepository Order { get; private set; }
+          public IOrderBackRepository OrderBack { get; private set; }
 
 
         public UnitOfWork(AppDbContext context)
@@ -26,6 +27,7 @@ namespace StoreManage.Server.Servicies.Repositories
             Seller = new SellerRepository(_context );
             User = new UserRepository(_context );
             Order = new OrderRepository(_context );
+            OrderBack = new OrderBackRepository(_context );
         }
 
         public int Complete()

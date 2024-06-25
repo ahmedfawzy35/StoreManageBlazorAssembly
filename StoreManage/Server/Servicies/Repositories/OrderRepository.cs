@@ -14,9 +14,9 @@ namespace StoreManage.Server.Servicies.Repositories
             _mycontext = context;
         }
 
-        public List<OrderDto> GetAllOrders()
+        public List<OrderDto> GetAllOrders( int brancheId)
         {
-            var orders = _mycontext.Orders.Include(x=>x.Customer).ToList();
+            var orders = _mycontext.Orders.Include(x=>x.Customer).Where(x=>x.BrancheId == brancheId).ToList();
             if (orders != null)
             {
                 return (ToOrderDto(orders!));
@@ -25,6 +25,31 @@ namespace StoreManage.Server.Servicies.Repositories
                 return new List<OrderDto>();
             }
            
+        }
+        public List<OrderDto> GetAllForDate(DateTime date, int brancheId)
+        {
+            var orders = _mycontext.Orders.Include(x => x.Customer).Where(x=> x.BrancheId == brancheId && x.Date.Date  == date.Date).ToList();
+            if (orders != null)
+            {
+                return (ToOrderDto(orders!));
+            }
+            else
+            {
+                return new List<OrderDto>();
+            }
+        }
+        public List<OrderDto> GetAllForTime(DateTime dateFrom, DateTime dateTo , int barncheId)
+
+        {
+            var orders = _mycontext.Orders.Include(x => x.Customer).Where(x=>x.BrancheId == barncheId && x.Date.Date  >= dateFrom.Date && x.Date.Date <= dateTo).ToList();
+            if (orders != null)
+            {
+                return (ToOrderDto(orders!));
+            }
+            else
+            {
+                return new List<OrderDto>();
+            }
         }
         public OrderDto GetOrder(int id)
         {
