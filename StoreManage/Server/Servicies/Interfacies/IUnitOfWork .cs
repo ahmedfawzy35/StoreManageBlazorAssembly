@@ -9,7 +9,7 @@ namespace StoreManage.Server.Servicies.Interfacies
         ICustomerRepository Customer { get; }
         ISellerRepository Seller { get; }
         IUserRepository User { get; }
-
+        IOrderRepository Order { get; }
         int Complete();
     }
 }

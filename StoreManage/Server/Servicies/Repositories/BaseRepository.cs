@@ -159,7 +159,7 @@ namespace StoreManage.Server.Servicies.Repositories
 
         public T Update(T entity)
         {
-            _context.Update(entity);
+            _context.Set<T>().Update(entity);
             return entity;
         }
 

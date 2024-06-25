@@ -1,10 +1,13 @@
-﻿using StoreManage.Shared.Models;
+﻿using StoreManage.Shared.Dtos.CustomerDato;
+using StoreManage.Shared.Dtos.OrderDtos;
+using StoreManage.Shared.Models;
 
 namespace StoreManage.Server.Servicies.Interfacies
 {
     public interface IOrderRepository : IBaseRepository<Order>
     {
 
-       // public Order Order { get; set; }
+        public List<OrderDto> GetAllOrders();
+        public OrderDto GetOrder(int id);
     }
 }
