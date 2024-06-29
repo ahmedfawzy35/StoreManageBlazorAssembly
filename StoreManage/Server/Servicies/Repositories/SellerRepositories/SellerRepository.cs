@@ -1,11 +1,11 @@
 ﻿using StoreManage.Server.Data;
-using StoreManage.Server.Servicies.Interfacies;
+using StoreManage.Server.Servicies.Interfacies.SellerInterfacies;
 using StoreManage.Shared.Dtos.CustomerDato;
 using StoreManage.Shared.Dtos.SellerDato;
 using StoreManage.Shared.Models;
 using StoreManage.Shared.Utilitis;
 
-namespace StoreManage.Server.Servicies.Repositories
+namespace StoreManage.Server.Servicies.Repositories.SellerRepositories
 {
     public class SellerRepository : BaseRepository<Seller>, ISellerRepository
     {
@@ -34,7 +34,7 @@ namespace StoreManage.Server.Servicies.Repositories
             sel.Adress = entity.Adress;
             sel.BrancheId = entity.BrancheId;
             sel.StartAccount = entity.StartAccount;
-           
+
             _context.Sellers.Add(sel);
             return entity;
 
@@ -43,7 +43,7 @@ namespace StoreManage.Server.Servicies.Repositories
         }
         public SellerAddDto Edit(SellerAddDto entity)
         {
-            var sel = this.GetById(entity.Id);
+            var sel = GetById(entity.Id);
             if (sel == null)
             {
                 return entity;
@@ -101,7 +101,7 @@ namespace StoreManage.Server.Servicies.Repositories
 
             sellerrAccount.LastAccount = LastAccount;
             sellerrAccount.TimeAccount = TimeAccount;
-            sellerrAccount.FinalTimeAccount = (LastAccount + TimeAccount);
+            sellerrAccount.FinalTimeAccount = LastAccount + TimeAccount;
             //customerAccount.FinalCustomerAccount = seller.se;
             // set elements values 
             foreach (var element in purchases.Where(x => x.IsDeleted == false && x.Date >= dateFrom.Date && x.Date <= dateTo.Date).ToList())

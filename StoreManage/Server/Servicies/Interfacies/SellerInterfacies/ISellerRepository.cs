@@ -2,7 +2,7 @@
 using StoreManage.Shared.Dtos.SellerDato;
 using StoreManage.Shared.Models;
 
-namespace StoreManage.Server.Servicies.Interfacies
+namespace StoreManage.Server.Servicies.Interfacies.SellerInterfacies
 {
     public interface ISellerRepository : IBaseRepository<Seller>
     {

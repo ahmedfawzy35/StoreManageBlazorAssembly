@@ -5,7 +5,7 @@ using StoreManage.Shared.Dtos.CustomerDato;
 using StoreManage.Shared.Dtos.UserDtos;
 using StoreManage.Shared.Models;
 
-namespace StoreManage.Server.Controllers
+namespace StoreManage.Server.Controllers.SellerControllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -19,7 +19,7 @@ namespace StoreManage.Server.Controllers
             _user = user;
         }
         [HttpGet]
-        public async Task< IActionResult> Login([FromBody] LoginDto model)
+        public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
             if (ModelState.IsValid)
             {

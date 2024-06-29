@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StoreManage.Server.Data;
-using StoreManage.Server.Servicies.Interfacies;
+using StoreManage.Server.Servicies.Interfacies.OrderInterfacies;
 using StoreManage.Shared.Dtos.OrderDtos;
 using StoreManage.Shared.Models;
 using System.Linq.Expressions;
 
-namespace StoreManage.Server.Servicies.Repositories
+namespace StoreManage.Server.Servicies.Repositories.OrderRepositories
 {
     public class OrderBackRepository : BaseRepository<OrderBack>, IOrderBackRepository
     {
@@ -20,7 +20,7 @@ namespace StoreManage.Server.Servicies.Repositories
             var orders = _mycontext.OrderBacks.Include(x => x.Customer).Where(x => x.BrancheId == brancheId).ToList();
             if (orders != null)
             {
-                return (ToOrderBackDto(orders!));
+                return ToOrderBackDto(orders!);
             }
             else
             {
@@ -33,7 +33,7 @@ namespace StoreManage.Server.Servicies.Repositories
             var orders = _mycontext.OrderBacks.Include(x => x.Customer).Where(x => x.BrancheId == brancheId && x.Date.Date == date.Date).ToList();
             if (orders != null)
             {
-                return (ToOrderBackDto(orders!));
+                return ToOrderBackDto(orders!);
             }
             else
             {
@@ -46,7 +46,7 @@ namespace StoreManage.Server.Servicies.Repositories
             var orders = _mycontext.OrderBacks.Include(x => x.Customer).Where(x => x.BrancheId == barncheId && x.Date.Date >= dateFrom.Date && x.Date.Date <= dateTo).ToList();
             if (orders != null)
             {
-                return (ToOrderBackDto(orders!));
+                return ToOrderBackDto(orders!);
             }
             else
             {

@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StoreManage.Server.Data;
-using StoreManage.Server.Servicies.Interfacies;
+using StoreManage.Server.Servicies.Interfacies.OrderInterfacies;
 using StoreManage.Shared.Dtos.OrderDtos;
 using StoreManage.Shared.Models;
 
-namespace StoreManage.Server.Servicies.Repositories
+namespace StoreManage.Server.Servicies.Repositories.OrderRepositories
 {
     public class OrderRepository : BaseRepository<Order>, IOrderRepository
     {
@@ -14,37 +14,38 @@ namespace StoreManage.Server.Servicies.Repositories
             _mycontext = context;
         }
 
-        public List<OrderDto> GetAllOrders( int brancheId)
+        public List<OrderDto> GetAllOrders(int brancheId)
         {
-            var orders = _mycontext.Orders.Include(x=>x.Customer).Where(x=>x.BrancheId == brancheId).ToList();
+            var orders = _mycontext.Orders.Include(x => x.Customer).Where(x => x.BrancheId == brancheId).ToList();
             if (orders != null)
             {
-                return (ToOrderDto(orders!));
-            }else
+                return ToOrderDto(orders!);
+            }
+            else
             {
                 return new List<OrderDto>();
             }
-           
+
         }
         public List<OrderDto> GetAllForDate(DateTime date, int brancheId)
         {
-            var orders = _mycontext.Orders.Include(x => x.Customer).Where(x=> x.BrancheId == brancheId && x.Date.Date  == date.Date).ToList();
+            var orders = _mycontext.Orders.Include(x => x.Customer).Where(x => x.BrancheId == brancheId && x.Date.Date == date.Date).ToList();
             if (orders != null)
             {
-                return (ToOrderDto(orders!));
+                return ToOrderDto(orders!);
             }
             else
             {
                 return new List<OrderDto>();
             }
         }
-        public List<OrderDto> GetAllForTime(DateTime dateFrom, DateTime dateTo , int barncheId)
+        public List<OrderDto> GetAllForTime(DateTime dateFrom, DateTime dateTo, int barncheId)
 
         {
-            var orders = _mycontext.Orders.Include(x => x.Customer).Where(x=>x.BrancheId == barncheId && x.Date.Date  >= dateFrom.Date && x.Date.Date <= dateTo).ToList();
+            var orders = _mycontext.Orders.Include(x => x.Customer).Where(x => x.BrancheId == barncheId && x.Date.Date >= dateFrom.Date && x.Date.Date <= dateTo).ToList();
             if (orders != null)
             {
-                return (ToOrderDto(orders!));
+                return ToOrderDto(orders!);
             }
             else
             {
@@ -55,8 +56,8 @@ namespace StoreManage.Server.Servicies.Repositories
         {
             try
             {
-                
-                var myorder = _mycontext.Orders.Include(x=>x.Customer).Where(x => x.Id == id).FirstOrDefault();
+
+                var myorder = _mycontext.Orders.Include(x => x.Customer).Where(x => x.Id == id).FirstOrDefault();
                 if (myorder != null)
                 {
                     var myorderDto = new OrderDto();
@@ -71,10 +72,10 @@ namespace StoreManage.Server.Servicies.Repositories
                     myorderDto.OrderNumber = myorder.OrderNumber;
                     myorderDto.Notes = myorder.Notes;
 
-                   
-                    myorderDto.CustomerName = myorder.Customer.Name ;
+
+                    myorderDto.CustomerName = myorder.Customer.Name;
                     return myorderDto;
-                } 
+                }
                 return new OrderDto();
             }
             catch (Exception)

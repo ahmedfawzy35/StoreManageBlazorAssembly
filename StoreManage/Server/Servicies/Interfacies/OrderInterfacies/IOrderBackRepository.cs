@@ -1,7 +1,7 @@
 ﻿using StoreManage.Shared.Dtos.OrderDtos;
 using StoreManage.Shared.Models;
 
-namespace StoreManage.Server.Servicies.Interfacies
+namespace StoreManage.Server.Servicies.Interfacies.OrderInterfacies
 {
     public interface IOrderBackRepository : IBaseRepository<OrderBack>
     {

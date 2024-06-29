@@ -1,26 +1,28 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StoreManage.Server.Servicies.Interfacies;
 using StoreManage.Shared.Dtos.CustomerDato;
-using StoreManage.Shared.Dtos.SellerDato;
+using StoreManage.Shared.Models;
+using System;
 
-namespace StoreManage.Server.Controllers
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace StoreManage.Server.Controllers.CustomerControllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class SellerController : ControllerBase
+    public class CustomerController : ControllerBase
     {
-        private readonly IUnitOfWork _seller;
+        private readonly IUnitOfWork _customer;
 
-        public SellerController(IUnitOfWork seller)
+        public CustomerController(IUnitOfWork customer)
         {
-            _seller = seller;
+            _customer = customer;
         }
         // GET: api/<CustomerController>
         [HttpGet]
         public IActionResult GetAll()
         {
-            var cus = _seller.Seller.GetAll();
+            var cus = _customer.Customer.GetAll();
             return Ok(cus);
         }
 
@@ -29,31 +31,31 @@ namespace StoreManage.Server.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var cus = _seller.Seller.GetById(id);
+            var cus = _customer.Customer.GetById(id);
             return Ok(cus);
         }
         // GET api/<CustomerController>/5
         [HttpGet]
         public async Task<IActionResult> Search([FromBody] string name)
         {
-            var cus = await _seller.Seller.FindAllAsync(x => x.Name.Contains(name));
+            var cus = await _customer.Customer.FindAllAsync(x => x.Name.Contains(name));
             return Ok(cus);
         }
         [HttpGet]
         public async Task<IActionResult> Account([FromBody] int id)
         {
-            var customerAccount = await _seller.Seller.GetSellerAccount(id, DateTime.Now.AddYears(-2), DateTime.Now, false);
+            var customerAccount = await _customer.Customer.GetCustomerAccount(id, DateTime.Now.AddYears(-2), DateTime.Now, false);
             return Ok(customerAccount);
         }
 
         // POST api/<CustomerController>
         [HttpPost]
-        public IActionResult Add([FromBody] SellerAddDto model)
+        public IActionResult Add([FromBody] CustomerAddDto model)
         {
             if (ModelState.IsValid)
             {
-                _seller.Seller.Add(model);
-                _seller.Complete();
+                _customer.Customer.Add(model);
+                _customer.Complete();
 
                 return Ok(model);
             }
@@ -63,7 +65,7 @@ namespace StoreManage.Server.Controllers
 
         // PUT api/<CustomerController>/5
         [HttpPut()]
-        public IActionResult Edit([FromBody] SellerAddDto model)
+        public IActionResult Edit([FromBody] CustomerAddDto model)
         {
             if (model.Id == 0)
             {
@@ -71,8 +73,8 @@ namespace StoreManage.Server.Controllers
             }
             if (ModelState.IsValid)
             {
-                _seller.Seller.Edit(model);
-                _seller.Complete();
+                _customer.Customer.Edit(model);
+                _customer.Complete();
                 return Ok(model);
             }
             return BadRequest("the model is not valid");
@@ -82,15 +84,16 @@ namespace StoreManage.Server.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var cus = _seller.Seller.GetById(id);
+            var cus = _customer.Customer.GetById(id);
             if (cus == null)
             {
                 return BadRequest("customer not found");
             }
-            _seller.Seller.Delete(cus);
-            _seller.Complete();
+            _customer.Customer.Delete(cus);
+            _customer.Complete();
             return Ok();
         }
+
 
     }
 }

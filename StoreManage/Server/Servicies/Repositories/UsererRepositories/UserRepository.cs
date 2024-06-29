@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StoreManage.Server.Data;
-using StoreManage.Server.Servicies.Interfacies;
+using StoreManage.Server.Servicies.Interfacies.UserInterfacies;
 using StoreManage.Shared.Dtos.UserDtos;
 using StoreManage.Shared.Models;
 using System.Linq;
 
-namespace StoreManage.Server.Servicies.Repositories
+namespace StoreManage.Server.Servicies.Repositories.UsererRepositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
@@ -19,27 +19,38 @@ namespace StoreManage.Server.Servicies.Repositories
 
         public async Task<LogInResponseDto> LoginAsync(LoginDto entity)
         {
-           var login = new LogInResponseDto();
-             
+            var login = new LogInResponseDto();
+
             var user = await _userRepository.FindAsync(x => x.UserName == entity.UserName && x.Password == entity.Password);
             if (user != null)
             {
                 var allBranches = await _context.Branches.ToListAsync();
-                var userRoles =await _context.UserRoles.Where(x=>x.UserId == user.Id).ToListAsync();
-                var userBranches = await _context.UserBranches.Include(b=>b.Branche).Where(x => x.UserId == user.Id).ToListAsync();
+                var userRoles = await _context.UserRoles.Where(x => x.UserId == user.Id).ToListAsync();
+                var userBranches = await _context.UserBranches.Include(b => b.Branche).Where(x => x.UserId == user.Id).ToListAsync();
                 List<Clime>? climes = new List<Clime>();
                 foreach (var role in userRoles)
                 {
-                    var roleClimes = await _context.RoleClimes.Include(c=>c.Clime).Where(x=>x.RoleId == role.Id).ToListAsync();
-                    foreach(var roleClime  in roleClimes)
+                    var roleClimes = await _context.RoleClimes.Include(c => c.Clime).Where(x => x.RoleId == role.Id).ToListAsync();
+                    foreach (var roleClime in roleClimes)
                     {
-                        climes.Add( roleClime.Clime);
+                        climes.Add(roleClime.Clime);
                     }
-                   
+
 
                 }
-                login.user = new UserDto {Id = user.Id , UserName = user.UserName , Password =user.Password , Enabled = user.Enabled , IdUserDeleIt = user.IdUserDeleIt , DateDeleted = user.DateDeleted,
-                                          EditCount = user.EditCount , FullName = user.FullName , IsDeleted = user.IsDeleted , IsEdit = user.IsEdit };
+                login.user = new UserDto
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Password = user.Password,
+                    Enabled = user.Enabled,
+                    IdUserDeleIt = user.IdUserDeleIt,
+                    DateDeleted = user.DateDeleted,
+                    EditCount = user.EditCount,
+                    FullName = user.FullName,
+                    IsDeleted = user.IsDeleted,
+                    IsEdit = user.IsEdit
+                };
                 login.Climes = ToClimeDto(climes);
                 login.Login = true;
                 login.UserBranches = ToBranchesDto(userBranches);
@@ -55,7 +66,7 @@ namespace StoreManage.Server.Servicies.Repositories
             List<ClimeDto> climeDtos = new List<ClimeDto>();
             foreach (var clime in climes)
             {
-                climeDtos.Add(new ClimeDto() {  Name = clime.Name});
+                climeDtos.Add(new ClimeDto() { Name = clime.Name });
             }
 
             return climeDtos;
@@ -65,7 +76,7 @@ namespace StoreManage.Server.Servicies.Repositories
             List<BrancheDto> userBranchesDto = new List<BrancheDto>();
             foreach (var userBranche in userBranches)
             {
-                userBranchesDto.Add(new BrancheDto() { Id = userBranche.Branche.Id, Name = userBranche.Branche.Name});
+                userBranchesDto.Add(new BrancheDto() { Id = userBranche.Branche.Id, Name = userBranche.Branche.Name });
             }
 
             return userBranchesDto;
@@ -75,11 +86,11 @@ namespace StoreManage.Server.Servicies.Repositories
             List<BrancheDto> brancheDto = new List<BrancheDto>();
             foreach (var branche in branches)
             {
-                brancheDto.Add(new BrancheDto() { Id = branche.Id, Name = branche.Name});
+                brancheDto.Add(new BrancheDto() { Id = branche.Id, Name = branche.Name });
             }
 
             return brancheDto;
         }
-      
+
     }
 }

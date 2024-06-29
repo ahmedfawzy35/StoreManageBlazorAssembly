@@ -6,7 +6,7 @@ using StoreManage.Shared.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace StoreManage.Server.Controllers
+namespace StoreManage.Server.Controllers.OrderControllers
 {
 
     [Route("api/[controller]/[action]")]
@@ -28,16 +28,16 @@ namespace StoreManage.Server.Controllers
             return Ok(_order.Order.GetAllOrders(brancheId));
         }
 
-     
+
         [HttpGet]
         public IActionResult GetAllForDate([FromBody] TimeDto time)
         {
-            return Ok(_order.Order.GetAllForDate(time.DateFrom , time.BrancheId));
+            return Ok(_order.Order.GetAllForDate(time.DateFrom, time.BrancheId));
         }
-          [HttpGet]
-        public IActionResult GetAllForTime([FromBody]TimeDto time)
+        [HttpGet]
+        public IActionResult GetAllForTime([FromBody] TimeDto time)
         {
-            return Ok(_order.Order.GetAllForTime(time.DateFrom , time.DateTo , time.BrancheId));
+            return Ok(_order.Order.GetAllForTime(time.DateFrom, time.DateTo, time.BrancheId));
         }
 
         // GET api/<OrderController>/5
@@ -47,7 +47,7 @@ namespace StoreManage.Server.Controllers
             var myorder = _order.Order.GetOrder(id);
             if (myorder.Id != 0)
             {
-               
+
                 return Ok(myorder);
             }
 
@@ -57,14 +57,14 @@ namespace StoreManage.Server.Controllers
 
         // POST api/<OrderController>
         [HttpPost]
-        public async Task< IActionResult> Add([FromBody] OrderDto model)
+        public async Task<IActionResult> Add([FromBody] OrderDto model)
         {
             if (ModelState.IsValid)
             {
                 var myorder = new Order();
                 myorder.Date = model.Date;
                 myorder.CustomerId = model.CustomerId;
-                myorder.Total = model.Total; 
+                myorder.Total = model.Total;
                 myorder.Paid = model.Paid;
                 myorder.Discount = model.Discount;
                 myorder.RemainingAmount = model.RemainingAmount;
@@ -74,7 +74,7 @@ namespace StoreManage.Server.Controllers
                 myorder.Notes = model.Notes;
                 try
                 {
-                 myorder =   await _order.Order.AddAsync(myorder);
+                    myorder = await _order.Order.AddAsync(myorder);
                     model.Id = myorder.Id;
                     _order.Complete();
                     return Ok(model);
@@ -84,27 +84,28 @@ namespace StoreManage.Server.Controllers
 
                     return BadRequest($"لم يتم اضاضفة الفاتورة ");
                 }
-             
-            }else
+
+            }
+            else
             {
-                return  BadRequest("البيانات غير مكتملة");
+                return BadRequest("البيانات غير مكتملة");
             }
         }
 
         // PUT api/<OrderController>/5
         [HttpPut("{id}")]
-        public  IActionResult  Edit(int id, [FromBody] OrderDto model)
+        public IActionResult Edit(int id, [FromBody] OrderDto model)
         {
-            
+
 
             if (ModelState.IsValid)
             {
-                var myorder =_order.Order.GetById(id);
+                var myorder = _order.Order.GetById(id);
                 if (myorder == null)
                 {
                     return BadRequest("لم يتم العثور على الفاتورة ");
                 }
-               
+
                 myorder.Date = model.Date;
                 myorder.CustomerId = model.CustomerId;
                 myorder.Total = model.Total;
@@ -125,9 +126,9 @@ namespace StoreManage.Server.Controllers
                 catch (Exception)
                 {
 
-                   return BadRequest("فشل تعديل الفاتورة");
+                    return BadRequest("فشل تعديل الفاتورة");
                 }
-                
+
             }
             else
             {
@@ -154,6 +155,6 @@ namespace StoreManage.Server.Controllers
             }
         }
 
-     
+
     }
 }

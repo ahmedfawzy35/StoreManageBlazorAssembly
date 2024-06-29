@@ -1,61 +1,59 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using StoreManage.Server.Servicies.Interfacies;
 using StoreManage.Shared.Dtos.CustomerDato;
-using StoreManage.Shared.Models;
-using System;
+using StoreManage.Shared.Dtos.SellerDato;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace StoreManage.Server.Controllers
+namespace StoreManage.Server.Controllers.SellerControllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class SellerController : ControllerBase
     {
-        private readonly IUnitOfWork _customer;
+        private readonly IUnitOfWork _seller;
 
-        public CustomerController(IUnitOfWork customer)
+        public SellerController(IUnitOfWork seller)
         {
-            _customer = customer;
+            _seller = seller;
         }
         // GET: api/<CustomerController>
         [HttpGet]
-        public IActionResult  GetAll()
+        public IActionResult GetAll()
         {
-            var cus = _customer.Customer.GetAll();
+            var cus = _seller.Seller.GetAll();
             return Ok(cus);
         }
 
-     
+
         // GET api/<CustomerController>/5
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var cus = _customer.Customer.GetById(id);
+            var cus = _seller.Seller.GetById(id);
             return Ok(cus);
         }
         // GET api/<CustomerController>/5
         [HttpGet]
-        public async Task< IActionResult> Search([FromBody] string name)
+        public async Task<IActionResult> Search([FromBody] string name)
         {
-            var cus = await _customer.Customer.FindAllAsync(x=>x.Name.Contains(name));
+            var cus = await _seller.Seller.FindAllAsync(x => x.Name.Contains(name));
             return Ok(cus);
         }
         [HttpGet]
-        public async Task< IActionResult> Account([FromBody] int  id)
+        public async Task<IActionResult> Account([FromBody] int id)
         {
-            var customerAccount = await _customer.Customer.GetCustomerAccount(id , DateTime.Now.AddYears(-2) , DateTime.Now , false);
+            var customerAccount = await _seller.Seller.GetSellerAccount(id, DateTime.Now.AddYears(-2), DateTime.Now, false);
             return Ok(customerAccount);
         }
 
         // POST api/<CustomerController>
         [HttpPost]
-        public IActionResult Add([FromBody] CustomerAddDto model)
+        public IActionResult Add([FromBody] SellerAddDto model)
         {
             if (ModelState.IsValid)
             {
-                _customer.Customer.Add(model);
-                _customer.Complete();
+                _seller.Seller.Add(model);
+                _seller.Complete();
 
                 return Ok(model);
             }
@@ -65,7 +63,7 @@ namespace StoreManage.Server.Controllers
 
         // PUT api/<CustomerController>/5
         [HttpPut()]
-        public IActionResult Edit([FromBody] CustomerAddDto model)
+        public IActionResult Edit([FromBody] SellerAddDto model)
         {
             if (model.Id == 0)
             {
@@ -73,9 +71,9 @@ namespace StoreManage.Server.Controllers
             }
             if (ModelState.IsValid)
             {
-                _customer.Customer.Edit(model );
-                _customer.Complete();
-                return Ok(model );
+                _seller.Seller.Edit(model);
+                _seller.Complete();
+                return Ok(model);
             }
             return BadRequest("the model is not valid");
         }
@@ -84,16 +82,15 @@ namespace StoreManage.Server.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var cus = _customer.Customer.GetById(id);
+            var cus = _seller.Seller.GetById(id);
             if (cus == null)
             {
                 return BadRequest("customer not found");
             }
-            _customer.Customer.Delete(cus);
-            _customer.Complete();
+            _seller.Seller.Delete(cus);
+            _seller.Complete();
             return Ok();
         }
-
 
     }
 }

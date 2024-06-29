@@ -6,7 +6,7 @@ using StoreManage.Shared.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace StoreManage.Server.Controllers
+namespace StoreManage.Server.Controllers.OrderControllers
 {
 
     [Route("api/[controller]/[action]")]
