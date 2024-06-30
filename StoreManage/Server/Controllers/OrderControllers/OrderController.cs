@@ -93,14 +93,14 @@ namespace StoreManage.Server.Controllers.OrderControllers
         }
 
         // PUT api/<OrderController>/5
-        [HttpPut("{id}")]
-        public IActionResult Edit(int id, [FromBody] OrderDto model)
+        [HttpPut()]
+        public IActionResult Edit( [FromBody] OrderDto model)
         {
 
 
             if (ModelState.IsValid)
             {
-                var myorder = _order.Order.GetById(id);
+                var myorder = _order.Order.GetById(model.Id);
                 if (myorder == null)
                 {
                     return BadRequest("لم يتم العثور على الفاتورة ");
@@ -120,7 +120,7 @@ namespace StoreManage.Server.Controllers.OrderControllers
                 {
                     _order.Order.Update(myorder);
                     _order.Complete();
-                    model.Id = id;
+                  
                     return Ok(model);
                 }
                 catch (Exception)

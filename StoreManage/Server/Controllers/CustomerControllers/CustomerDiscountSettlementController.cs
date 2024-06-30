@@ -6,7 +6,7 @@ using StoreManage.Shared.Models;
 
 namespace StoreManage.Server.Controllers.CustomerControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class CustomerDiscountSettlementController : ControllerBase
     {

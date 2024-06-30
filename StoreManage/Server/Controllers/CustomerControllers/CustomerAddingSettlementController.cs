@@ -85,9 +85,17 @@ namespace StoreManage.Server.Controllers.CustomerControllers
                 cas.BrancheId = model.BrancheId;
                 cas.UserId = model.UserId;
 
-                _UnitOfWork.CustomerAddingSettlement.Update(cas);
-                _UnitOfWork.Complete();
-                return Ok(model);
+                try
+                {
+                    _UnitOfWork.CustomerAddingSettlement.Update(cas);
+                    _UnitOfWork.Complete();
+                    return Ok(model);
+                }
+                catch (Exception x)
+                {
+
+                    return BadRequest(x.Message); 
+                }
             }
             return BadRequest("the model is not valid");
         }
