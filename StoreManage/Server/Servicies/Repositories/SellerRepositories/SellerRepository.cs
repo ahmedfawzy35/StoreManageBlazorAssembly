@@ -102,33 +102,36 @@ namespace StoreManage.Server.Servicies.Repositories.SellerRepositories
             sellerrAccount.LastAccount = LastAccount;
             sellerrAccount.TimeAccount = TimeAccount;
             sellerrAccount.FinalTimeAccount = LastAccount + TimeAccount;
-            //customerAccount.FinalCustomerAccount = seller.se;
+            sellerrAccount.FinalCustomerAccount = LastAccount + TimeAccount;
+
+            sellerrAccount.FinalCustomerAccount = seller.SellrAccount;
+
             // set elements values 
             foreach (var element in purchases.Where(x => x.IsDeleted == false && x.Date >= dateFrom.Date && x.Date <= dateTo.Date).ToList())
             {
                 if (!showCashOrders)
                     if (element.RemainingAmount <= 0) continue;
 
-                elements.Add(new CustomerAccountElementDto { Id = element.Id, Number = element.OrderNumber, Value = element.RemainingAmount, Notes = "(فاتورة) " + element.Notes, Date = element.Date, Type = MyTypes.CustomerAccountElementTyps.Order.ToString(), Add = true });
+                elements.Add(new CustomerAccountElementDto { Id = element.Id, Number = element.OrderNumber, Value = element.RemainingAmount, Notes = "(فاتورة) " + element.Notes, Date = element.Date, Type = MyTypes.SellerAccountElementTyps.Purchase.ToString(), Add = true });
 
             }
             foreach (var element in purchaseBacks.Where(x => x.IsDeleted == false && x.Date >= dateFrom.Date && x.Date <= dateTo.Date).ToList())
             {
                 if (!showCashOrders)
                     if (element.RemainingAmount <= 0) continue;
-                elements.Add(new CustomerAccountElementDto { Id = element.Id, Number = element.OrderNumber, Value = element.RemainingAmount, Notes = "(مرتجع) " + element.Notes, Date = element.Date, Type = MyTypes.CustomerAccountElementTyps.OrderBack.ToString(), Add = false });
+                elements.Add(new CustomerAccountElementDto { Id = element.Id, Number = element.OrderNumber, Value = element.RemainingAmount, Notes = "(مرتجع) " + element.Notes, Date = element.Date, Type = MyTypes.SellerAccountElementTyps.PurchaseBack.ToString(), Add = false });
             }
             foreach (var element in cashOutToSeller.Where(x => x.IsDeleted == false && x.Date >= dateFrom.Date && x.Date <= dateTo.Date).ToList())
             {
-                elements.Add(new CustomerAccountElementDto { Id = element.Id, Value = element.Value, Notes = "(دفعة) " + element.Notes, Date = element.Date, Type = MyTypes.CustomerAccountElementTyps.CashInFromCustomer.ToString(), Add = false });
+                elements.Add(new CustomerAccountElementDto { Id = element.Id, Value = element.Value, Notes = "(دفعة) " + element.Notes, Date = element.Date, Type = MyTypes.SellerAccountElementTyps.CashOutToSeller.ToString(), Add = false });
             }
             foreach (var element in sellerAddingSettlements.Where(x => x.Date >= dateFrom.Date && x.Date <= dateTo.Date).ToList())
             {
-                elements.Add(new CustomerAccountElementDto { Id = element.Id, Value = element.Value, Notes = "(تسوية اضافه) " + element.Notes, Date = element.Date, Type = MyTypes.CustomerAccountElementTyps.CustomerAddingSettlement.ToString(), Add = true });
+                elements.Add(new CustomerAccountElementDto { Id = element.Id, Value = element.Value, Notes = "(تسوية اضافه) " + element.Notes, Date = element.Date, Type = MyTypes.SellerAccountElementTyps.SellerAddingSettlement.ToString(), Add = true });
             }
             foreach (var element in sellerDiscountSettlements.Where(x => x.Date >= dateFrom.Date && x.Date <= dateTo.Date).ToList())
             {
-                elements.Add(new CustomerAccountElementDto { Id = element.Id, Value = element.Value, Notes = "(تسوية خصم) " + element.Notes, Date = element.Date, Type = MyTypes.CustomerAccountElementTyps.CustomerDiscountSettlement.ToString(), Add = false });
+                elements.Add(new CustomerAccountElementDto { Id = element.Id, Value = element.Value, Notes = "(تسوية خصم) " + element.Notes, Date = element.Date, Type = MyTypes.SellerAccountElementTyps.SellerDiscountSettlement.ToString(), Add = false });
             }
 
             var sortedElements = elements.OrderBy(x => x.Date).ToList();

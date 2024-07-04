@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StoreManage.Server.Consts;
+using System;
 using System.Collections.Generic;
 
 namespace StoreManage.Shared.Models
@@ -28,5 +29,11 @@ namespace StoreManage.Shared.Models
         public virtual ICollection<SellerAddingSettlement> SellerAddingSettlements { get; set; }
         public virtual ICollection<SellerDiscountSettlement> SellerDiscountSettlements { get; set; }
         public virtual ICollection<SellerPhone> SellerPhones { get; set; }
+        public virtual double SellrAccount => StartAccount
+        + (Purchases == null ? 0 : Purchases.Where(c => c.IsDeleted == false).Sum(x => x.RemainingAmount))
+                                            - (PurchaseBacks == null ? 0 : PurchaseBacks.Where(c => c.IsDeleted == false).Sum(x => x.RemainingAmount))
+                                            - (CashOutToSellers == null ? 0 : CashOutToSellers.Where(c => c.IsDeleted == false).Sum(x => x.Value))
+                                            + (SellerAddingSettlements == null ? 0 : SellerAddingSettlements.Sum(x => x.Value))
+                                            - (SellerDiscountSettlements == null ? 0 : SellerDiscountSettlements.Sum(x => x.Value));
     }
 }
