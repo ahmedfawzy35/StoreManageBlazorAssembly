@@ -19,6 +19,14 @@ namespace StoreManage.Server.Controllers.CustomerControllers
             _UnitOfWork = UnitOfWork;
         }
 
+        // GET: api/<CustomerController>
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var cas = _UnitOfWork.CustomerAddingSettlement.GetAll();
+            return Ok(cas);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {

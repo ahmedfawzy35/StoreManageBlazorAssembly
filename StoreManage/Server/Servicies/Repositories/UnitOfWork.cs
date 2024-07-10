@@ -21,6 +21,7 @@ namespace StoreManage.Server.Servicies.Repositories
         public IBaseRepository<Catogry> Catogry { get; private set; }
        
         public ICustomerRepository Customer { get; private set; }
+        public IBaseRepository<CustomerType> CustomerType { get; private set; }
         public IBaseRepository<CustomerDiscountSettlement> CustomerDiscountSettlement { get; private set; }
         public IBaseRepository<CustomerAddingSettlement> CustomerAddingSettlement { get; private set; }
         public ISellerRepository Seller { get; private set; }
@@ -38,6 +39,7 @@ namespace StoreManage.Server.Servicies.Repositories
             Catogry = new BaseRepository<Catogry>(_context);
             
             Customer = new CustomerRepository(_context );
+            CustomerType = new BaseRepository<CustomerType>(_context);
             CustomerAddingSettlement = new BaseRepository<CustomerAddingSettlement>(_context);
             CustomerDiscountSettlement = new BaseRepository<CustomerDiscountSettlement>(_context);
 

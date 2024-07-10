@@ -16,7 +16,12 @@ namespace StoreManage.Server.Controllers.CustomerControllers
         {
             _UnitOfWork = UnitOfWork;
         }
-
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var cas = _UnitOfWork.CustomerDiscountSettlement.GetAll();
+            return Ok(cas);
+        }
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {

@@ -5,7 +5,7 @@ using StoreManage.Shared.Dtos.CustomerDato;
 using StoreManage.Shared.Dtos.UserDtos;
 using StoreManage.Shared.Models;
 
-namespace StoreManage.Server.Controllers.SellerControllers
+namespace StoreManage.Server.Controllers.UserControllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]

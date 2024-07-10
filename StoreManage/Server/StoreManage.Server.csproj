@@ -25,9 +25,5 @@
     <ProjectReference Include="..\Shared\StoreManage.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\UserControllers\" />
-  </ItemGroup>
-
 
 </Project>
