@@ -25,7 +25,8 @@ namespace StoreManage.Server.Servicies.Repositories
         public IBaseRepository<CustomerDiscountSettlement> CustomerDiscountSettlement { get; private set; }
         public IBaseRepository<CustomerAddingSettlement> CustomerAddingSettlement { get; private set; }
         public ISellerRepository Seller { get; private set; }
-
+        public IBaseRepository<SellerAddingSettlement> SellerAddingSettlement { get; private set; }
+        public IBaseRepository<SellerDiscountSettlement> SellerDiscountSettlement { get; private set; }
         public IUserRepository User { get; private set; }
         public IOrderRepository Order { get; private set; }
           public IOrderBackRepository OrderBack { get; private set; }
@@ -44,6 +45,9 @@ namespace StoreManage.Server.Servicies.Repositories
             CustomerDiscountSettlement = new BaseRepository<CustomerDiscountSettlement>(_context);
 
             Seller = new SellerRepository(_context );
+            SellerAddingSettlement = new BaseRepository<SellerAddingSettlement>(_context);
+            SellerDiscountSettlement = new BaseRepository<SellerDiscountSettlement>(_context);
+
             User = new UserRepository(_context );
             Order = new OrderRepository(_context );
             OrderBack = new OrderBackRepository(_context );

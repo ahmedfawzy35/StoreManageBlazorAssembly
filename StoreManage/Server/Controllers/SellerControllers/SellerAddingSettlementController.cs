@@ -1,59 +1,61 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreManage.Server.Servicies.Interfacies;
-using StoreManage.Shared.Dtos.CustomerDato;
 using StoreManage.Shared.Dtos.CustomerDato.CustomerSettlementDtos;
 using StoreManage.Shared.Dtos.SellerDato.SellerSettlementDtos;
 using StoreManage.Shared.Models;
 
-namespace StoreManage.Server.Controllers.CustomerControllers
+namespace StoreManage.Server.Controllers.SellerControllers
 {
     [Route("api/[controller]/[action]")]
 
     [ApiController]
-    public class CustomerAddingSettlementController : ControllerBase
+    public class SellerAddingSettlementController : ControllerBase
     {
         private readonly IUnitOfWork _UnitOfWork;
 
-        public CustomerAddingSettlementController(IUnitOfWork UnitOfWork)
+        public SellerAddingSettlementController(IUnitOfWork UnitOfWork)
         {
             _UnitOfWork = UnitOfWork;
         }
 
         // GET: api/<CustomerController>
+
         [HttpGet]
         public IActionResult GetAll()
+
         {
             var include = new string[1];
-            include[0] = "Customer";
-            var cas = _UnitOfWork.CustomerAddingSettlement.FindAll(x=> true , include);
+            include[0] = "Seller";
+            var cas = _UnitOfWork.SellerAddingSettlement.FindAll(x => true, include);
             return Ok(ToDto(cas.ToList()));
         }
         [HttpGet]
-        public IActionResult GetAllForBranche([FromBody]int BrancheId)
+        public IActionResult GetAllForBranche([FromBody]int brancheId)
+
         {
-            var include = new string[1];
-            include[0] = "Customer";
-            var cas = _UnitOfWork.CustomerAddingSettlement.FindAll(x => x.BrancheId == BrancheId, include);
+            var include =new string[1];
+            include[0] = "Seller";
+            var cas = _UnitOfWork.SellerAddingSettlement.FindAll( x=> x.BrancheId == brancheId , include);
             return Ok(ToDto(cas.ToList()));
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var cas = _UnitOfWork.CustomerAddingSettlement.GetById(id);
+            var cas = _UnitOfWork.SellerAddingSettlement.GetById(id);
             if (cas != null)
             {
-                var customer = _UnitOfWork.Customer.GetById(cas.CustomerId);
-                var casDto = new CustomerAddingSettlementDto();
+                var seller = _UnitOfWork.Seller.GetById(cas.SellerId);
+                var casDto = new SellerAddingSettlementDto();
                 casDto.Id = cas.Id;
                 casDto.UserId = cas.UserId;
                 casDto.BrancheId = cas.BrancheId;
-                casDto.CustomerId = cas.CustomerId;
+                casDto.SellerId = cas.SellerId;
                 casDto.Date = cas.Date;
                 casDto.Value = cas.Value;
                 casDto.Notes = cas.Notes;
-                casDto.CustomerName = customer == null ? " " : customer.Name;
+                casDto.SellerName = seller == null ? " " : seller.Name;
 
                 return Ok(casDto);
             }
@@ -64,19 +66,19 @@ namespace StoreManage.Server.Controllers.CustomerControllers
         }
 
         [HttpPost]
-        public IActionResult Add([FromBody] CustomerAddingSettlementDto model)
+        public IActionResult Add([FromBody] SellerAddingSettlementDto model)
         {
             if (ModelState.IsValid)
             {
-                var cas = new CustomerAddingSettlement();
-                cas.CustomerId = model.CustomerId;
+                var cas = new SellerAddingSettlement();
+                cas.SellerId = model.SellerId;
                 cas.Date = model.Date;
                 cas.Value = model.Value;
                 cas.Notes = model.Notes;
-                cas.BrancheId = model.BrancheId;    
-                cas.UserId = model.UserId;  
+                cas.BrancheId = model.BrancheId;
+                cas.UserId = model.UserId;
 
-                _UnitOfWork.CustomerAddingSettlement.Add(cas);
+                _UnitOfWork.SellerAddingSettlement.Add(cas);
                 _UnitOfWork.Complete();
 
                 return Ok(model);
@@ -86,18 +88,18 @@ namespace StoreManage.Server.Controllers.CustomerControllers
         }
 
         [HttpPut()]
-        public IActionResult Edit([FromBody] CustomerAddingSettlementDto model)
+        public IActionResult Edit([FromBody] SellerAddingSettlementDto model)
         {
-           
+
             if (ModelState.IsValid)
             {
-                
-                var cas =_UnitOfWork.CustomerAddingSettlement.GetById(model.Id);
+
+                var cas = _UnitOfWork.SellerAddingSettlement.GetById(model.Id);
                 if (cas == null)
                 {
                     return BadRequest("لم يتم ايجاد التسوية");
                 }
-                cas.CustomerId = model.CustomerId;
+                cas.SellerId = model.SellerId;
                 cas.Date = model.Date;
                 cas.Value = model.Value;
                 cas.Notes = model.Notes;
@@ -106,14 +108,14 @@ namespace StoreManage.Server.Controllers.CustomerControllers
 
                 try
                 {
-                    _UnitOfWork.CustomerAddingSettlement.Update(cas);
+                    _UnitOfWork.SellerAddingSettlement.Update(cas);
                     _UnitOfWork.Complete();
                     return Ok(model);
                 }
                 catch (Exception x)
                 {
 
-                    return BadRequest(x.Message); 
+                    return BadRequest(x.Message);
                 }
             }
             return BadRequest("the model is not valid");
@@ -123,37 +125,37 @@ namespace StoreManage.Server.Controllers.CustomerControllers
         public IActionResult Delete(int id)
         {
 
-            var cas = _UnitOfWork.CustomerAddingSettlement.GetById(id);
+            var cas = _UnitOfWork.SellerAddingSettlement.GetById(id);
 
             if (cas == null)
             {
                 return BadRequest("لم يتم ايجاد التسوية");
             }
-            _UnitOfWork.CustomerAddingSettlement.Delete(cas);
+            _UnitOfWork.SellerAddingSettlement.Delete(cas);
             _UnitOfWork.Complete();
             return Ok("تم الحذف");
         }
-        private List<CustomerAddingSettlementDto> ToDto(List<CustomerAddingSettlement> source)
+
+        private List<SellerAddingSettlementDto> ToDto(List<SellerAddingSettlement> source)
         {
-            List<CustomerAddingSettlementDto> data = new List<CustomerAddingSettlementDto>();
+            List<SellerAddingSettlementDto> data = new List<SellerAddingSettlementDto>();
             foreach (var item in source)
             {
-                data.Add(new CustomerAddingSettlementDto
+                data.Add(new SellerAddingSettlementDto
                 {
                     Id = item.Id,
                     Date = item.Date,
                     Notes = item.Notes,
-                    CustomerId = item.CustomerId,
-                    CustomerName = item.Customer.Name,
+                    SellerId = item.SellerId,
+                    SellerName = item.Seller.Name,
                     BrancheId = item.BrancheId,
                     UserId = item.UserId,
-                    Value = item.Value
-
+                    Value = item.Value  
+                    
                 });
             }
 
             return data;
         }
-
     }
 }

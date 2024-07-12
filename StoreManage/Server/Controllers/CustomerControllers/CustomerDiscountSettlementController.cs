@@ -19,9 +19,21 @@ namespace StoreManage.Server.Controllers.CustomerControllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var cas = _UnitOfWork.CustomerDiscountSettlement.GetAll();
-            return Ok(cas);
+            var include = new string[1];
+            include[0] = "Customer";
+            var cas = _UnitOfWork.CustomerDiscountSettlement.FindAll(x=> true , include);
+            return Ok(ToDto(cas.ToList()));
         }
+
+        [HttpGet]
+        public IActionResult GetAllForBranche([FromBody]int BrancheId)
+        {
+            var include = new string[1];
+            include[0] = "Customer";
+            var cas = _UnitOfWork.CustomerDiscountSettlement.FindAll(x => x.BrancheId == BrancheId, include);
+            return Ok(ToDto(cas.ToList()));
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -29,7 +41,7 @@ namespace StoreManage.Server.Controllers.CustomerControllers
             if (cas != null)
             {
                 var customer = _UnitOfWork.Customer.GetById(cas.CustomerId);
-                var casDto = new CustomerDiscountSettlementDto();
+                var casDto = new CustomerAddingSettlementDto();
                 casDto.Id = cas.Id;
                 casDto.UserId = cas.UserId;
                 casDto.BrancheId = cas.BrancheId;
@@ -48,7 +60,7 @@ namespace StoreManage.Server.Controllers.CustomerControllers
         }
 
         [HttpPost]
-        public IActionResult Add([FromBody] CustomerDiscountSettlementDto model)
+        public IActionResult Add([FromBody] CustomerAddingSettlementDto model)
         {
             if (ModelState.IsValid)
             {
@@ -70,7 +82,7 @@ namespace StoreManage.Server.Controllers.CustomerControllers
         }
 
         [HttpPut()]
-        public IActionResult Edit([FromBody] CustomerDiscountSettlementDto model)
+        public IActionResult Edit([FromBody] CustomerAddingSettlementDto model)
         {
 
             if (ModelState.IsValid)
@@ -108,6 +120,27 @@ namespace StoreManage.Server.Controllers.CustomerControllers
             _UnitOfWork.CustomerDiscountSettlement.Delete(cas);
             _UnitOfWork.Complete();
             return Ok("تم الحذف");
+        }
+        private List<CustomerDiscountSettlementDto> ToDto(List<CustomerDiscountSettlement> source)
+        {
+            List<CustomerDiscountSettlementDto> data = new List<CustomerDiscountSettlementDto>();
+            foreach (var item in source)
+            {
+                data.Add(new CustomerDiscountSettlementDto
+                {
+                    Id = item.Id,
+                    Date = item.Date,
+                    Notes = item.Notes,
+                    CustomerId = item.CustomerId,
+                    CustomerName = item.Customer.Name,
+                    BrancheId = item.BrancheId,
+                    UserId = item.UserId,
+                    Value = item.Value
+
+                });
+            }
+
+            return data;
         }
     }
 }

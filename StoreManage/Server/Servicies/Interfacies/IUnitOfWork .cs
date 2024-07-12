@@ -16,6 +16,8 @@ namespace StoreManage.Server.Servicies.Interfacies
         ICustomerRepository Customer { get; }
         IBaseRepository<CustomerType> CustomerType { get; }
         ISellerRepository Seller { get; }
+        IBaseRepository<SellerAddingSettlement> SellerAddingSettlement { get; }
+        IBaseRepository<SellerDiscountSettlement> SellerDiscountSettlement { get; }
         IUserRepository User { get; }
         IOrderRepository Order { get; }
         IOrderBackRepository OrderBack { get; }
