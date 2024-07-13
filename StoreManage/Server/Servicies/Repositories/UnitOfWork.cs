@@ -33,6 +33,50 @@ namespace StoreManage.Server.Servicies.Repositories
         public IPurchaseRepository Purchase { get; private set; }
         public IPurchaseBackRepository PurchaseBack { get; private set; }
 
+        public IBaseRepository<CashInFromBankAccount> CashInFromBankAccount  { get; private set; }
+
+        public IBaseRepository<CashInFromBrancheMoneySafe> CashInFromBrancheMoneySafe  { get; private set; }
+
+        public IBaseRepository<CashInFromCustomer> CashInFromCustomer  { get; private set; }
+
+        public IBaseRepository<CashInFromIncome> CashInFromIncome  { get; private set; }
+
+        public IBaseRepository<CashInFromMasterMoneySafe> CashInFromMasterMoneySafe  { get; private set; }
+
+        public IBaseRepository<CashOutToAdvancepaymentOfSalary> CashOutToAdvancepaymentOfSalary  { get; private set; }
+
+        public IBaseRepository<CashOutToBankAccount> CashOutToBankAccount  { get; private set; }
+
+        public IBaseRepository<CashOutToBrancheMoneySafe> CashOutToBrancheMoneySafe  { get; private set; }
+
+        public IBaseRepository<CashOutToMasterMoneySafe> CashOutToMasterMoneySafe  { get; private set; }
+
+        public IBaseRepository<CashOutToOutGoing> CashOutToOutGoing  { get; private set; }
+
+        public IBaseRepository<CashOutToSalary> CashOutToSalary  { get; private set; }
+
+        public IBaseRepository<CashOutToSeller> CashOutToSeller  { get; private set; }
+
+        public IBaseRepository<CashDayClose> CashDayClose  { get; private set; }
+
+        public IBaseRepository<MasterMoneySafe> MasterMoneySafe  { get; private set; }
+
+        public IBaseRepository<BrancheMoneySafe> BrancheMoneySafe  { get; private set; }
+
+        public IBaseRepository<OutGoing> OutGoing  { get; private set; }
+
+        public IBaseRepository<InCome> InCome  { get; private set; }
+
+        public IBaseRepository<Employee> Employee  { get; private set; }
+
+        public IBaseRepository<EmployeeIncrease> EmployeeIncrease  { get; private set; }
+
+        public IBaseRepository<EmployeeLess> EmployeeLess  { get; private set; }
+
+        public IBaseRepository<EmployeePenalty> EmployeePenalty  { get; private set; }
+
+        public IBaseRepository<EmployeeReward> EmployeeReward  { get; private set; }
+
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
@@ -54,7 +98,51 @@ namespace StoreManage.Server.Servicies.Repositories
             Purchase = new PurchaseRepository(_context );
             PurchaseBack = new PurchaseBackRepository(_context );
 
-        }
+            CashInFromBankAccount = new BaseRepository<CashInFromBankAccount>(_context);
+
+            CashInFromBrancheMoneySafe = new BaseRepository<CashInFromBrancheMoneySafe>(_context);
+
+       CashInFromCustomer  = new BaseRepository<CashInFromCustomer>(_context);
+
+            CashInFromIncome = new BaseRepository<CashInFromIncome>(_context);
+
+            CashInFromMasterMoneySafe = new BaseRepository<CashInFromMasterMoneySafe>(_context);
+
+            CashOutToAdvancepaymentOfSalary = new BaseRepository<CashOutToAdvancepaymentOfSalary>(_context);
+
+            CashOutToBankAccount = new BaseRepository<CashOutToBankAccount>(_context);
+
+            CashOutToBrancheMoneySafe = new BaseRepository<CashOutToBrancheMoneySafe>(_context);
+
+       CashOutToMasterMoneySafe = new BaseRepository<CashOutToMasterMoneySafe>(_context);
+
+      CashOutToOutGoing = new BaseRepository<CashOutToOutGoing>(_context);
+
+        CashOutToSalary = new BaseRepository<CashOutToSalary>(_context);
+
+        CashOutToSeller = new BaseRepository<CashOutToSeller>(_context);
+
+        CashDayClose = new BaseRepository<CashDayClose>(_context);
+
+      MasterMoneySafe = new BaseRepository<MasterMoneySafe>(_context);
+
+         BrancheMoneySafe = new BaseRepository<BrancheMoneySafe>(_context);
+
+         OutGoing = new BaseRepository<OutGoing>(_context);
+
+        InCome = new BaseRepository<InCome>(_context);
+
+         Employee = new BaseRepository<Employee>(_context);
+
+         EmployeeIncrease = new BaseRepository<EmployeeIncrease>(_context);
+
+         EmployeeLess = new BaseRepository<EmployeeLess>(_context);
+
+        EmployeePenalty = new BaseRepository<EmployeePenalty>(_context);
+
+        EmployeeReward = new BaseRepository<EmployeeReward>(_context);
+
+    }
 
         public int Complete()
         {

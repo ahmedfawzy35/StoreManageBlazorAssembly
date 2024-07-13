@@ -7,7 +7,7 @@ using StoreManage.Shared.Models;
 
 namespace StoreManage.Server.Controllers.CustomerControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class CustomerTypeController : ControllerBase
     {
@@ -21,7 +21,17 @@ namespace StoreManage.Server.Controllers.CustomerControllers
         public IActionResult GetAll()
         {
             var ct = _UnitOfWork.CustomerType.GetAll();
-            return Ok(ct);
+            var ctds = new List<CustomerTypeDto>();
+            foreach (var item in ct)
+            {
+                ctds.Add(new CustomerTypeDto
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                });
+            }
+            
+            return Ok(ctds);
         }
         [HttpGet("{id}")]
         public IActionResult GetById(int id)

@@ -10,7 +10,7 @@ namespace StoreManage.Server.Servicies.Repositories.CustomerRepositories
 {
     public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _mycontext;
         private BaseRepository<Order> _orderRepository;
         private BaseRepository<OrderBack> _orderBackRepository;
         private BaseRepository<CashInFromCustomer> _cashInFromCustomerRepository;
@@ -18,7 +18,7 @@ namespace StoreManage.Server.Servicies.Repositories.CustomerRepositories
         private BaseRepository<CustomerDiscountSettlement> _customerDiscountSettlementRepository;
         public CustomerRepository(AppDbContext context) : base(context)
         {
-            _context = context;
+            _mycontext = context;
             _orderRepository = new BaseRepository<Order>(context);
             _orderBackRepository = new BaseRepository<OrderBack>(context);
             _cashInFromCustomerRepository = new BaseRepository<CashInFromCustomer>(context);
@@ -37,7 +37,7 @@ namespace StoreManage.Server.Servicies.Repositories.CustomerRepositories
             cus.StartAccount = entity.StartAccount;
             cus.CustomertypeId = entity.CustomertypeId;
             cus.StopDealing = entity.StopDealing;
-            _context.Customers.Add(cus);
+            _mycontext.Customers.Add(cus);
             return entity;
 
 
@@ -56,7 +56,7 @@ namespace StoreManage.Server.Servicies.Repositories.CustomerRepositories
             cus.StartAccount = entity.StartAccount;
             cus.CustomertypeId = entity.CustomertypeId;
             cus.StopDealing = entity.StopDealing;
-            _context.Customers.Update(cus);
+            _mycontext.Customers.Update(cus);
             return entity;
 
 

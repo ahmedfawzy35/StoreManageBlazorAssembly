@@ -23,6 +23,45 @@ namespace StoreManage.Server.Servicies.Interfacies
         IOrderBackRepository OrderBack { get; }
         IPurchaseRepository Purchase { get; }
         IPurchaseBackRepository PurchaseBack { get; }
+
+        #region cash in
+
+        IBaseRepository<CashInFromBankAccount> CashInFromBankAccount { get; }
+        IBaseRepository<CashInFromBrancheMoneySafe> CashInFromBrancheMoneySafe { get; }
+        IBaseRepository<CashInFromCustomer> CashInFromCustomer { get; }
+        IBaseRepository<CashInFromIncome> CashInFromIncome { get; }
+        IBaseRepository<CashInFromMasterMoneySafe> CashInFromMasterMoneySafe { get; }
+
+        #endregion
+        #region cash out
+
+        IBaseRepository<CashOutToAdvancepaymentOfSalary> CashOutToAdvancepaymentOfSalary { get; }
+        IBaseRepository<CashOutToBankAccount> CashOutToBankAccount { get; }
+        IBaseRepository<CashOutToBrancheMoneySafe> CashOutToBrancheMoneySafe { get; }
+        IBaseRepository<CashOutToMasterMoneySafe> CashOutToMasterMoneySafe { get; }
+        IBaseRepository<CashOutToOutGoing> CashOutToOutGoing { get; }
+        IBaseRepository<CashOutToSalary> CashOutToSalary { get; }
+        IBaseRepository<CashOutToSeller> CashOutToSeller { get; }
+
+        #endregion
+        IBaseRepository<CashDayClose> CashDayClose { get; }
+
+        #region money safe
+        IBaseRepository<MasterMoneySafe> MasterMoneySafe { get; }
+        IBaseRepository<BrancheMoneySafe> BrancheMoneySafe { get; }
+
+        #endregion
+        IBaseRepository<OutGoing> OutGoing { get; }
+        IBaseRepository<InCome> InCome { get; }
+
+        #region employee
+        IBaseRepository<Employee> Employee { get; }
+        IBaseRepository<EmployeeIncrease> EmployeeIncrease { get; }
+        IBaseRepository<EmployeeLess> EmployeeLess { get; }
+        IBaseRepository<EmployeePenalty> EmployeePenalty { get; }
+        IBaseRepository<EmployeeReward> EmployeeReward { get; }
+
+        #endregion
         int Complete();
     }
 }
