@@ -20,7 +20,7 @@ namespace StoreManage.Shared.Models
         public int BrancheId { get; set; }
         public string? Notes { get; set; }
         public int OrderNumber { get; set; }
-        public double OrderProfit { get; set; }
+        public double OrderProfit { get; set; } = 0;
         public DateTime? DateDeleted { get; set; }
         public int EditCount { get; set; }
         public int? IdUserDeleIt { get; set; }

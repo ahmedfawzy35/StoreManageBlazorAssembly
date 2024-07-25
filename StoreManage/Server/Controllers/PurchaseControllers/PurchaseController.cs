@@ -77,10 +77,10 @@ namespace StoreManage.Server.Controllers.PurchaseControllers
                     model.Id = myorder.Id;
                     return Ok(model);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 
-                    return BadRequest($"لم يتم اضاضفة فاتورة الشراء ");
+                    return BadRequest($"لم يتم اضاضفة فاتورة الشراء  {ex.Message}");
                 }
 
             }
