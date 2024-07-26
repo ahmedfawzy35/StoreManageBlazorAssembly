@@ -13,7 +13,7 @@ namespace StoreManage.Shared.Models
         public int BrancheId { get; set; }
         public bool? IsEdit { get; set; }
         public int EditCount { get; set; }
-        public bool? IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
         public DateTime? DateDeleted { get; set; }
         public int? IdUserDeleIt { get; set; }
         public int BrancheMoneySafeId { get; set; }
