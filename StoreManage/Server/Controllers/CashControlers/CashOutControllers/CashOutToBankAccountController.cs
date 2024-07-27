@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreManage.Server.Servicies.Interfacies;
-using StoreManage.Shared.Dtos.CashDtos.CashInDtos;
+using StoreManage.Shared.Dtos.CashDtos.CashOutDtos;
 using StoreManage.Shared.Models;
 
-namespace StoreManage.Server.Controllers.CashControlers.CashInControllers
+namespace StoreManage.Server.Controllers.CashControlers.CashOutControllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class CashInFromBankAccountController : ControllerBase
+    public class CashOutToBankAccountController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public CashInFromBankAccountController(IUnitOfWork unitOfWork)
+        public CashOutToBankAccountController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -25,8 +25,10 @@ namespace StoreManage.Server.Controllers.CashControlers.CashInControllers
             include[0] = "BanckAccount";
             include[1] = "Branche";
             include[2] = "User";
-            var ci = _unitOfWork.CashInFromBankAccount.FindAll(x => x.BrancheId == brancheId && !x.IsDeleted, include);
-            return Ok(ToCashInFromBankAccountDtos(ci.ToList()));
+            var ci = _unitOfWork.CashOutToBankAccount.FindAll(x => x.BrancheId == brancheId && (x.IsDeleted == null? true :x.IsDeleted == false), include);
+            if (ci != null)
+                return Ok(ToCashOutToBankAccountDtos(ci.ToList()));
+            else return BadRequest("لا يوجد بيانات");
 
         }
         [HttpGet("{id}")]
@@ -37,35 +39,44 @@ namespace StoreManage.Server.Controllers.CashControlers.CashInControllers
             include[0] = "BanckAccount";
             include[1] = "Branche";
             include[2] = "User";
-            var c = _unitOfWork.CashInFromBankAccount.Find(x => x.Id == id, include);
-            if (c is null)
+            try
             {
+                var c = _unitOfWork.CashOutToBankAccount.Find(x => x.Id == id, include);
+
+                if (c is null)
+                {
+                    return BadRequest("لم يتم ايجاد العملية في قاعدة البيانات");
+                }
+                var cdto = new CashOutToBankAccountDto
+                {
+                    BrancheId = c.BrancheId,
+                    BrancheName = c.Branche.Name,
+                    BanckAccountId = c.BanckAccountId,
+                    BanckAccountName = c.BanckAccount.BankName,
+                    BanckBrancheName = c.BanckAccount.BankBrancheName,
+                    Date = c.Date,
+                    Id = c.Id,
+                    Notes = c.Notes,
+                    UserFullName = c.User.FullName,
+                    UserId = c.User.Id,
+                    Value = c.Value,
+
+                };
+                return Ok(cdto);
+            }
+            catch (Exception)
+            {
+
                 return BadRequest("لم يتم ايجاد العملية في قاعدة البيانات");
             }
-            var cdto = new CashInFromBankAccountDto
-            {
-                BrancheId = c.BrancheId,
-                BrancheName = c.Branche.Name,
-                BanckAccountId = c.BanckAccountId,
-                BanckAccountName = c.BanckAccount.BankName,
-                BanckAccountBrancheName = c.BanckAccount.BankBrancheName,
-                Date = c.Date,
-                Id = c.Id,
-                Notes = c.Notes,
-                UserFullName = c.User.FullName,
-                UserId = c.User.Id,
-                Value = c.Value,
-
-            };
-            return Ok(cdto);
 
         }
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CashInFromBankAccountDto model)
+        public async Task<IActionResult> Add([FromBody] CashOutToBankAccountDto model)
         {
             if (ModelState.IsValid)
             {
-                var myCash = new CashInFromBankAccount();
+                var myCash = new CashOutToBankAccount();
                 myCash.Date = model.Date;
                 myCash.Value = model.Value;
                 myCash.Notes = model.Notes;
@@ -76,7 +87,7 @@ namespace StoreManage.Server.Controllers.CashControlers.CashInControllers
 
                 try
                 {
-                    myCash = await _unitOfWork.CashInFromBankAccount.AddAsync(myCash);
+                    myCash = await _unitOfWork.CashOutToBankAccount.AddAsync(myCash);
                     _unitOfWork.Complete();
 
                     model.Id = myCash.Id;
@@ -96,13 +107,13 @@ namespace StoreManage.Server.Controllers.CashControlers.CashInControllers
         }
 
         [HttpPut()]
-        public IActionResult Edit([FromBody] CashInFromBankAccountDto model)
+        public IActionResult Edit([FromBody] CashOutToBankAccountDto model)
         {
 
 
             if (ModelState.IsValid)
             {
-                var myCash = _unitOfWork.CashInFromBankAccount.GetById(model.Id);
+                var myCash = _unitOfWork.CashOutToBankAccount.GetById(model.Id);
                 if (myCash == null)
                 {
                     return BadRequest("لم يتم العثور على العملية ");
@@ -117,7 +128,7 @@ namespace StoreManage.Server.Controllers.CashControlers.CashInControllers
                 myCash.BrancheId = model.BrancheId;
                 try
                 {
-                    _unitOfWork.CashInFromBankAccount.Update(myCash);
+                    _unitOfWork.CashOutToBankAccount.Update(myCash);
                     _unitOfWork.Complete();
 
                     return Ok(model);
@@ -139,12 +150,12 @@ namespace StoreManage.Server.Controllers.CashControlers.CashInControllers
         {
             try
             {
-                var myCash = _unitOfWork.CashInFromBankAccount.GetById(id);
+                var myCash = _unitOfWork.CashOutToBankAccount.GetById(id);
                 if (myCash == null)
                 {
                     return BadRequest("لم يتم العثور على العملية ");
                 }
-                _unitOfWork.CashInFromBankAccount.Delete(myCash);
+                _unitOfWork.CashOutToBankAccount.Delete(myCash);
                 _unitOfWork.Complete();
                 return Ok("تم حذف العملية ");
             }
@@ -155,19 +166,19 @@ namespace StoreManage.Server.Controllers.CashControlers.CashInControllers
             }
         }
 
-        private List<CashInFromBankAccountDto> ToCashInFromBankAccountDtos(List<CashInFromBankAccount> source)
+        private List<CashOutToBankAccountDto> ToCashOutToBankAccountDtos(List<CashOutToBankAccount> source)
         {
-            List<CashInFromBankAccountDto> list = new List<CashInFromBankAccountDto>();
+            List<CashOutToBankAccountDto> list = new List<CashOutToBankAccountDto>();
 
             foreach (var c in source)
             {
-                list.Add(new CashInFromBankAccountDto
+                list.Add(new CashOutToBankAccountDto
                 {
                     BrancheId = c.BrancheId,
                     BrancheName = c.Branche.Name,
                     BanckAccountId = c.BanckAccountId,
                     BanckAccountName = c.BanckAccount.BankName,
-                    BanckAccountBrancheName = c.BanckAccount.BankBrancheName,
+                    BanckBrancheName = c.BanckAccount.BankBrancheName,
                     Date = c.Date,
                     Id = c.Id,
                     Notes = c.Notes,
@@ -179,6 +190,5 @@ namespace StoreManage.Server.Controllers.CashControlers.CashInControllers
             }
             return list;
         }
-
     }
 }

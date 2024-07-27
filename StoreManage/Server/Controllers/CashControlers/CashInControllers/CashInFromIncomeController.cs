@@ -22,7 +22,7 @@ namespace StoreManage.Server.Controllers.CashControlers.CashInControllers
 
         {
             var include = new string[3];
-            include[0] = "Income";
+            include[0] = "InCome";
             include[1] = "Branche";
             include[2] = "User";
             var ci = _unitOfWork.CashInFromIncome.FindAll(x => x.BrancheId == brancheId && !x.IsDeleted, include);
@@ -34,7 +34,7 @@ namespace StoreManage.Server.Controllers.CashControlers.CashInControllers
 
         {
             var include = new string[3];
-            include[0] = "Income";
+            include[0] = "InCome";
             include[1] = "Branche";
             include[2] = "User";
             var c = _unitOfWork.CashInFromIncome.Find(x => x.Id == id, include);
