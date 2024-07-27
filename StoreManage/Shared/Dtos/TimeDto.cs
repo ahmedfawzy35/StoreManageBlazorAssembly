@@ -12,5 +12,12 @@ namespace StoreManage.Shared.Dtos
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; } 
         public int BrancheId { get; set; }
+    } 
+    public class DayDto
+    {
+
+        public DateTime Date { get; set; }
+        public int BrancheId { get; set; }
     }
+
 }
