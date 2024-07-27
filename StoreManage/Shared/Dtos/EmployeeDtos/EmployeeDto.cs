@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StoreManage.Shared.Dtos.EmployeeDtos
 {
-    internal class EmployeeDto
+    public class EmployeeDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;

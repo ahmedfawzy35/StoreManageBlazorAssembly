@@ -19,6 +19,9 @@ namespace StoreManage.Server.Servicies.Repositories
         private readonly AppDbContext _context;
 
         public IBaseRepository<Catogry> Catogry { get; private set; }
+        public IBaseRepository<Branche> Branche { get; private set; }
+        public IBaseRepository<BankAccount> BankAccount { get; private set; }
+        public IBaseRepository<Product> Product { get; private set; }
        
         public ICustomerRepository Customer { get; private set; }
         public IBaseRepository<CustomerType> CustomerType { get; private set; }
@@ -82,6 +85,9 @@ namespace StoreManage.Server.Servicies.Repositories
             _context = context;
 
             Catogry = new BaseRepository<Catogry>(_context);
+            Branche = new BaseRepository<Branche>(_context);
+            BankAccount = new BaseRepository<BankAccount>(_context);
+            Product = new BaseRepository<Product>(_context);
             
             Customer = new CustomerRepository(_context );
             CustomerType = new BaseRepository<CustomerType>(_context);

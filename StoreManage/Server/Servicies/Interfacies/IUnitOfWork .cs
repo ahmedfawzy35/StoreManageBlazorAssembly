@@ -11,6 +11,8 @@ namespace StoreManage.Server.Servicies.Interfacies
     {
 
         IBaseRepository<Catogry> Catogry { get; }
+        IBaseRepository<Branche> Branche { get; }
+        IBaseRepository<Product> Product { get; }
         IBaseRepository<CustomerAddingSettlement> CustomerAddingSettlement { get; }
         IBaseRepository<CustomerDiscountSettlement> CustomerDiscountSettlement { get; }
         ICustomerRepository Customer { get; }
@@ -18,11 +20,16 @@ namespace StoreManage.Server.Servicies.Interfacies
         ISellerRepository Seller { get; }
         IBaseRepository<SellerAddingSettlement> SellerAddingSettlement { get; }
         IBaseRepository<SellerDiscountSettlement> SellerDiscountSettlement { get; }
+        IBaseRepository<BankAccount> BankAccount { get; }
+
+
+
         IUserRepository User { get; }
         IOrderRepository Order { get; }
         IOrderBackRepository OrderBack { get; }
         IPurchaseRepository Purchase { get; }
         IPurchaseBackRepository PurchaseBack { get; }
+
 
         #region cash in
 

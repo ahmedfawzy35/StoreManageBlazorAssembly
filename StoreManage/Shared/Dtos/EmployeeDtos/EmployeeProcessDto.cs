@@ -17,6 +17,7 @@ namespace StoreManage.Shared.Dtos.EmployeeDtos
         public int EmployeeId { get; set; }
 
         public  string? EmployeeName { get; set; } = null!;
-        public  string? UserSullName { get; set; } = null!;
+        public  string? BrancheName { get; set; } = null!;
+        public  string? UserFullName { get; set; } = null!;
     }
 }
