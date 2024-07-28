@@ -58,12 +58,12 @@ namespace StoreManage.Server.Controllers.InComeControllers
         {
             if (ModelState.IsValid)
             {
+                var branche = _unitOfWork.Branche.GetById(model.BrancheId);
                 var myCash = new InCome
                 {
                     Name = model.Name,
                     Notes = model.Notes,
                     BrancheId = model.BrancheId,
-
                 };
 
                 try
@@ -72,6 +72,7 @@ namespace StoreManage.Server.Controllers.InComeControllers
                     _unitOfWork.Complete();
 
                     model.Id = myCash.Id;
+                    model.BrancheName = branche.Name;
                     return Ok(model);
                 }
                 catch (Exception)
@@ -94,22 +95,27 @@ namespace StoreManage.Server.Controllers.InComeControllers
 
             if (ModelState.IsValid)
             {
+
+                var branche = _unitOfWork.Branche.GetById(model.BrancheId);
+
                 var InCome = _unitOfWork.InCome.GetById(model.Id);
                 if (InCome == null)
                 {
                     return BadRequest("لم يتم العثور على بند الايرادات ");
                 }
 
+
                 InCome.Name = model.Name;
                 InCome.Notes = model.Notes;
                 InCome.BrancheId = model.BrancheId;
-
+               
 
                 try
                 {
                     _unitOfWork.InCome.Update(InCome);
                     _unitOfWork.Complete();
 
+                    model.BrancheName = branche.Name;
                     return Ok(model);
                 }
                 catch (Exception)

@@ -2,6 +2,7 @@
 using StoreManage.Server.Servicies.Interfacies;
 using StoreManage.Shared.Dtos.CustomerDato;
 using StoreManage.Shared.Models;
+using StoreManage.Shared.Utilitis.Extentions;
 using System;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -24,6 +25,26 @@ namespace StoreManage.Server.Controllers.CustomerControllers
         {
             var cus = _customer.Customer.GetAll();
             return Ok(cus);
+        }
+
+
+        [HttpGet("{branchId}")]
+        public IActionResult GetAllForBranche(int branchId)
+        {
+            var include =new string[2];
+            include[0] = "Branche";
+            include[1] = "Customertype";
+            var cus = _customer.Customer.FindAll(x=>x.BrancheId == branchId, include);
+            return Ok(cus.ToList().ToCustomerDto());
+        }
+         [HttpGet("{branchId}")]
+        public IActionResult GetAllForBrancheWithAccounts(int branchId)
+        {
+            var include =new string[2];
+            include[0] = "Branche";
+            include[1] = "Customertype";
+            var cus = _customer.Customer.FindAll(x=>x.BrancheId == branchId, include);
+            return Ok(cus.ToList().ToCustomerDto());
         }
 
 
@@ -94,6 +115,9 @@ namespace StoreManage.Server.Controllers.CustomerControllers
             return Ok();
         }
 
-
+        //private List<CustomerAddDto> _toCustomerDto(this List<Customer> source)
+        //{
+        //    List<custdt>
+        //}
     }
 }

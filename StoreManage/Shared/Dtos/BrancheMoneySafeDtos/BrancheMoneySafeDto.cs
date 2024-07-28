@@ -17,6 +17,6 @@ namespace StoreManage.Shared.Dtos.BrancheMoneySafeDtos
         public double StartAccount { get; set; }
         public int BrancheId { get; set; }
 
-        public  string BrancheName { get; set; } = null!;
+        public  string? BrancheName { get; set; } = null!;
     }
 }

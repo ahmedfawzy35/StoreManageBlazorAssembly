@@ -58,6 +58,7 @@ namespace StoreManage.Server.Controllers.MoneySafeControllers
         {
             if (ModelState.IsValid)
             {
+                var brance = _unitOfWork.Branche.GetById(model.BrancheId);
                 var myCash = new BrancheMoneySafe
                 {
                     Name = model.Name,
@@ -73,6 +74,7 @@ namespace StoreManage.Server.Controllers.MoneySafeControllers
                     _unitOfWork.Complete();
 
                     model.Id = myCash.Id;
+                    model.BrancheName = brance.Name;
                     return Ok(model);
                 }
                 catch (Exception)
@@ -95,6 +97,8 @@ namespace StoreManage.Server.Controllers.MoneySafeControllers
 
             if (ModelState.IsValid)
             {
+                var brance = _unitOfWork.Branche.GetById(model.BrancheId);
+
                 var BrancheMoneySafe = _unitOfWork.BrancheMoneySafe.GetById(model.Id);
                 if (BrancheMoneySafe == null)
                 {
@@ -111,6 +115,7 @@ namespace StoreManage.Server.Controllers.MoneySafeControllers
                 {
                     _unitOfWork.BrancheMoneySafe.Update(BrancheMoneySafe);
                     _unitOfWork.Complete();
+                    model.BrancheName = brance.Name;
 
                     return Ok(model);
                 }

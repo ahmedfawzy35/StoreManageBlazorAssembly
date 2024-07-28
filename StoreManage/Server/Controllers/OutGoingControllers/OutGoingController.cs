@@ -58,6 +58,7 @@ namespace StoreManage.Server.Controllers.OutGoingControllers
         {
             if (ModelState.IsValid)
             {
+                var brance = _unitOfWork.Branche.GetById(model.BrancheId);
                 var myCash = new OutGoing
                 {
                     Name = model.Name,
@@ -70,6 +71,7 @@ namespace StoreManage.Server.Controllers.OutGoingControllers
                 {
                     myCash = await _unitOfWork.OutGoing.AddAsync(myCash);
                     _unitOfWork.Complete();
+                    model.BrancheName = brance.Name;
 
                     model.Id = myCash.Id;
                     return Ok(model);
@@ -94,6 +96,8 @@ namespace StoreManage.Server.Controllers.OutGoingControllers
 
             if (ModelState.IsValid)
             {
+                var brance = _unitOfWork.Branche.GetById(model.BrancheId);
+
                 var OutGoing = _unitOfWork.OutGoing.GetById(model.Id);
                 if (OutGoing == null)
                 {
@@ -109,6 +113,7 @@ namespace StoreManage.Server.Controllers.OutGoingControllers
                 {
                     _unitOfWork.OutGoing.Update(OutGoing);
                     _unitOfWork.Complete();
+                    model.BrancheName = brance.Name;
 
                     return Ok(model);
                 }

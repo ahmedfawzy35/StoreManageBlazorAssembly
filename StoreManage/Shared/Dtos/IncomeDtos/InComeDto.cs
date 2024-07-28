@@ -14,6 +14,6 @@ namespace StoreManage.Shared.Dtos.IncomeDtos
         public string? Notes { get; set; }
         public int BrancheId { get; set; }
 
-        public  string BrancheName { get; set; } = null!;
+        public  string? BrancheName { get; set; } = null!;
     }
 }
