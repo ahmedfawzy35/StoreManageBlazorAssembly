@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StoreManage.Server.Servicies.Interfacies;
+using StoreManage.Shared.Dtos;
 using StoreManage.Shared.Dtos.CustomerDato;
 using StoreManage.Shared.Models;
 using StoreManage.Shared.Utilitis.Extentions;
@@ -29,15 +30,31 @@ namespace StoreManage.Server.Controllers.CustomerControllers
 
 
         [HttpGet("{branchId}")]
-        public IActionResult GetAllForBranche(int branchId)
+        public IActionResult GetAllForBranche(int brancheId)
         {
             var include =new string[2];
             include[0] = "Branche";
             include[1] = "Customertype";
-            var cus = _customer.Customer.FindAll(x=>x.BrancheId == branchId, include);
+            var cus = _customer.Customer.FindAll(x=>x.BrancheId == brancheId, include);
             return Ok(cus.ToList().ToCustomerDto());
         }
-         [HttpGet("{branchId}")]
+
+        [HttpGet]
+        public IActionResult GetAllForBranche2([FromBody] GetCustometDto model)
+        {
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var user = _customer.User.Find(x => x.Id == model.UserId);
+            if (user == null) return BadRequest(ModelState);
+            if (!user.Enabled) return BadRequest("user is unenable");
+
+            var include = new string[2];
+            include[0] = "Branche";
+            include[1] = "Customertype";
+            var cus = _customer.Customer.FindAll(x => x.BrancheId == model.BrancheId, include);
+            return Ok(cus.ToList().ToCustomerDto());
+        }
+        [HttpGet("{branchId}")]
         public IActionResult GetAllForBrancheWithAccounts(int branchId)
         {
             var include =new string[2];
