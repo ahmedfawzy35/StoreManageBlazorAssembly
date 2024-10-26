@@ -22,7 +22,7 @@ namespace StoreManage.Server.Servicies.Repositories.UsererRepositories
             var login = new LogInResponseDto();
 
             var user = await _userRepository.FindAsync(x => x.UserName == entity.UserName && x.Password == entity.Password);
-            if (user != null)
+            if (user != null && user.Enabled)
             {
                 var allBranches = await _context.Branches.ToListAsync();
                 var userRoles = await _context.UserRoles.Where(x => x.UserId == user.Id).ToListAsync();
