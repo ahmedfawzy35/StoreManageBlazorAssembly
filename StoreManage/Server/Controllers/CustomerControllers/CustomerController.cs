@@ -21,21 +21,35 @@ namespace StoreManage.Server.Controllers.CustomerControllers
             _customer = customer;
         }
         // GET: api/<CustomerController>
+        //[HttpGet]
+        //public IActionResult GetAll()
+        //{
+        //    var cus = _customer.Customer.GetAll();
+        //    return Ok(cus);
+        //}
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromBody] GetCustometDto model)
         {
-            var cus = _customer.Customer.GetAll();
-            return Ok(cus);
-        }
 
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var user = _customer.User.Find(x => x.Id == model.UserId);
+            if (user == null) return BadRequest(ModelState);
+            if (!user.Enabled) return BadRequest("user is unenable");
+
+            var include = new string[2];
+            include[0] = "Branche";
+            include[1] = "Customertype";
+            var cus = _customer.Customer.GetAll();
+            return Ok(cus.ToList().ToCustomerDto());
+        }
 
         [HttpGet("{branchId}")]
         public IActionResult GetAllForBranche(int brancheId)
         {
-            var include =new string[2];
+            var include = new string[2];
             include[0] = "Branche";
             include[1] = "Customertype";
-            var cus = _customer.Customer.FindAll(x=>x.BrancheId == brancheId, include);
+            var cus = _customer.Customer.FindAll(x => x.BrancheId == brancheId, include);
             return Ok(cus.ToList().ToCustomerDto());
         }
 
