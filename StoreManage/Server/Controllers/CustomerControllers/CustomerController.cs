@@ -39,7 +39,7 @@ namespace StoreManage.Server.Controllers.CustomerControllers
             var include = new string[2];
             include[0] = "Branche";
             include[1] = "Customertype";
-            var cus = _customer.Customer.GetAll();
+            var cus = _customer.Customer.FindAll(x=> !x.Archived);
             return Ok(cus.ToList().ToCustomerDto());
         }
 
@@ -49,7 +49,7 @@ namespace StoreManage.Server.Controllers.CustomerControllers
             var include = new string[2];
             include[0] = "Branche";
             include[1] = "Customertype";
-            var cus = _customer.Customer.FindAll(x => x.BrancheId == brancheId, include);
+            var cus = _customer.Customer.FindAll(x => x.BrancheId == brancheId & !x.Archived, include);
             return Ok(cus.ToList().ToCustomerDto());
         }
 
@@ -65,7 +65,7 @@ namespace StoreManage.Server.Controllers.CustomerControllers
             var include = new string[2];
             include[0] = "Branche";
             include[1] = "Customertype";
-            var cus = _customer.Customer.FindAll(x => x.BrancheId == model.BrancheId, include);
+            var cus = _customer.Customer.FindAll(x => x.BrancheId == model.BrancheId & !x.Archived, include);
             return Ok(cus.ToList().ToCustomerDto());
         }
         [HttpGet("{branchId}")]
@@ -74,7 +74,7 @@ namespace StoreManage.Server.Controllers.CustomerControllers
             var include =new string[2];
             include[0] = "Branche";
             include[1] = "Customertype";
-            var cus = _customer.Customer.FindAll(x=>x.BrancheId == branchId, include);
+            var cus = _customer.Customer.FindAll(x=>x.BrancheId == branchId & !x.Archived, include);
             return Ok(cus.ToList().ToCustomerDto());
         }
 
@@ -90,7 +90,7 @@ namespace StoreManage.Server.Controllers.CustomerControllers
         [HttpGet]
         public async Task<IActionResult> Search([FromBody] string name)
         {
-            var cus = await _customer.Customer.FindAllAsync(x => x.Name.Contains(name));
+            var cus = await _customer.Customer.FindAllAsync(x => x.Name.Contains(name) & !x.Archived);
             return Ok(cus);
         }
         [HttpGet]

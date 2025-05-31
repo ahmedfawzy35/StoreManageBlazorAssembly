@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreManage.Server", "StoreManage\Server\StoreManage.Server.csproj", "{C7967D50-47AF-4973-BB01-CCED11EAF924}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreManage.Server", "StoreManage\Server\StoreManage.Server.csproj", "{C7967D50-47AF-4973-BB01-CCED11EAF924}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreManage.Client", "StoreManage\Client\StoreManage.Client.csproj", "{8523DCEA-6CB7-4684-AA35-080388C09DC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreManage.Client", "StoreManage\Client\StoreManage.Client.csproj", "{8523DCEA-6CB7-4684-AA35-080388C09DC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreManage.Shared", "StoreManage\Shared\StoreManage.Shared.csproj", "{30727AC2-CD23-460E-BE6F-1D2D6AC0703A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreManage.Shared", "StoreManage\Shared\StoreManage.Shared.csproj", "{30727AC2-CD23-460E-BE6F-1D2D6AC0703A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

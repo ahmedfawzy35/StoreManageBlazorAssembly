@@ -22,8 +22,8 @@ namespace StoreManage.Shared.Models
         public int BrancheId { get; set; }
         public int CustomertypeId { get; set; }
         public bool? StopDealing { get; set; }
+        public bool Archived { get; set; }
 
-     
         public virtual Branche? Branche { get; set; } = null!;
         public virtual CustomerType? Customertype { get; set; } = null!;
         public virtual ICollection<CashInFromCustomer> CashInFromCustomers { get; set; }

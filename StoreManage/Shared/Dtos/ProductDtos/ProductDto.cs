@@ -10,7 +10,7 @@ namespace StoreManage.Shared.Dtos.ProductDtos
     public class ProductDto
     {
         public int Id { get; set; }
-        public string Barcode { get; set; } = new Guid().ToString();
+        public string? Barcode { get; set; } 
 
         public string Name { get; set; } = null!;
         public string? Details { get; set; }
@@ -27,6 +27,19 @@ namespace StoreManage.Shared.Dtos.ProductDtos
 
         public  string? BrancheName { get; set; } = null!;
         public  string? CatogryName { get; set; } = null!;
-       
+        public string? ImageBase64 { get; set; }
+    }
+
+    public class ProductSearchDto
+    {
+        public int Id { get; set; }
+        public string? Barcode { get; set; }
+
+        public string Name { get; set; } = null!;
+        public double LastPurchasePrice { get; set; }
+        public double Price1 { get; set; }
+        public double Price2 { get; set; }
+        public string? CatogryName { get; set; } = null!;
+        public string? ImageBase64 { get; set; }
     }
 }

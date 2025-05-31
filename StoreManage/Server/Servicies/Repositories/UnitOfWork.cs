@@ -22,6 +22,7 @@ namespace StoreManage.Server.Servicies.Repositories
         public IBaseRepository<Branche> Branche { get; private set; }
         public IBaseRepository<BankAccount> BankAccount { get; private set; }
         public IBaseRepository<Product> Product { get; private set; }
+        public IBaseRepository<ProductImage> ProductImage { get; private set; }
        
         public ICustomerRepository Customer { get; private set; }
         public IBaseRepository<CustomerType> CustomerType { get; private set; }
@@ -88,6 +89,7 @@ namespace StoreManage.Server.Servicies.Repositories
             Branche = new BaseRepository<Branche>(_context);
             BankAccount = new BaseRepository<BankAccount>(_context);
             Product = new BaseRepository<Product>(_context);
+            ProductImage = new BaseRepository<ProductImage>(_context);
             
             Customer = new CustomerRepository(_context );
             CustomerType = new BaseRepository<CustomerType>(_context);

@@ -13,6 +13,7 @@ namespace StoreManage.Server.Servicies.Interfacies
         IBaseRepository<Catogry> Catogry { get; }
         IBaseRepository<Branche> Branche { get; }
         IBaseRepository<Product> Product { get; }
+        IBaseRepository<ProductImage> ProductImage { get; }
         IBaseRepository<CustomerAddingSettlement> CustomerAddingSettlement { get; }
         IBaseRepository<CustomerDiscountSettlement> CustomerDiscountSettlement { get; }
         ICustomerRepository Customer { get; }

@@ -14,9 +14,9 @@ namespace StoreManage.Shared.Models
         }
 
         public int Id { get; set; }
-        public string Barcode { get; set; } = new Guid().ToString();
+        public string? Barcode { get; set; } = new Guid().ToString();
 
-        public string Name { get; set; } = null!;
+        public string? Name { get; set; } = null!;
         public string? Details { get; set; }
         public int StartStock { get; set; }
         public double LastPurchasePrice { get; set; }
@@ -30,10 +30,17 @@ namespace StoreManage.Shared.Models
         public double Stock { get; set; }
 
         public virtual Branche Branche { get; set; } = null!;
-        public virtual Catogry Catogry { get; set; } = null!;
-        public virtual ICollection<OrderBackDetail> OrderBackDetails { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public virtual ICollection<PurchaseBackDetail> PurchaseBackDetails { get; set; }
-        public virtual ICollection<PurchaseDetail> PurchaseDetails { get; set; }
+        public virtual Catogry catogry { get; set; } = null!;
+        public virtual ICollection<OrderBackDetail>? OrderBackDetails { get; set; }
+        public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
+        public virtual ICollection<PurchaseBackDetail>? PurchaseBackDetails { get; set; }
+        public virtual ICollection<PurchaseDetail>? PurchaseDetails { get; set; }
+        public virtual IEnumerable<ProductImage>? ProductImages { get; set; } = new List<ProductImage>();
+
+        public virtual int OrderQte => OrderDetails == null ? 0 : OrderDetails.Sum(x => x.Qte);
+        public virtual int OrdersBackQte => OrderBackDetails == null ? 0 : OrderBackDetails.Sum(x => x.Qte);
+        public virtual int PurchaseQte => PurchaseDetails == null ? 0 : PurchaseDetails.Sum(x => x.Qte);
+        public virtual int PurchaseBackQte => PurchaseBackDetails == null ? 0 : PurchaseBackDetails.Sum(x => x.Qte);
+
     }
 }

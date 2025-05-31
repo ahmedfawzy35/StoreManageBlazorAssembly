@@ -8,7 +8,7 @@ using StoreManage.Server.Servicies.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+//oflineConnection
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefultConnection")) );

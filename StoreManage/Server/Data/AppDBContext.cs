@@ -59,6 +59,7 @@ namespace StoreManage.Server.Data
         public virtual DbSet<OrderToReview> OrderToReviews { get; set; } = null!;
         public virtual DbSet<OutGoing> OutGoings { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
+        public virtual DbSet<ProductImage> ProductImages { get; set; } = null!;
         public virtual DbSet<ProductTransfer> ProductTransfers { get; set; } = null!;
         public virtual DbSet<ProductTransferDetail> ProductTransferDetails { get; set; } = null!;
         public virtual DbSet<Purchase> Purchases { get; set; } = null!;
@@ -828,7 +829,7 @@ namespace StoreManage.Server.Data
                     .HasForeignKey(d => d.BrancheId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
 
-                entity.HasOne(d => d.Catogry)
+                entity.HasOne(d => d.catogry)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.CatogryId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
