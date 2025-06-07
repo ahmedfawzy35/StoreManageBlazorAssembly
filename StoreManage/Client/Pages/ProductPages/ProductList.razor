@@ -1,41 +1,140 @@
 ﻿@page "/products"
-@using StoreManage.Shared.Dtos.ProductDtos;
+@using StoreManage.Shared.Dtos.ProductDtos
 @inject HttpClient Http
-<h3>قائمة المنتجات</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>الاسم</th>
-            <th>الصورة المصغرة</th>
-            <th>إجراءات</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var prod in products)
-        {
-            <tr>
-                <td>@prod.Name</td>
-                <td>
-                    @if (prod.ThumbnailImageBase64 != null && !string.IsNullOrEmpty(prod.ThumbnailImageBase64.Thumbnail))
-                    {
-                        <img src="data:@prod.ThumbnailImageBase64.ContentType;base64,@prod.ThumbnailImageBase64.Thumbnail" width="80" />
-                    }
+@inject NavigationManager NavManager
 
-                </td>
-                <td>
-                    <a class="btn btn-info btn-sm" href="/products/details/@prod.Id">تفاصيل</a>
-                    <a class="btn btn-warning btn-sm" href="/products/edit/@prod.Id">تعديل</a>
-                </td>
-            </tr>
+<h3 class="text-center mb-4">🛒 قائمة المنتجات</h3>
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">جاري التحميل...</span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" class="form-control" placeholder="🔍 ابحث عن منتج..." @bind="SearchTerm" />
+        </div>
+        <div class="col-md-4">
+            <select class="form-select" @bind="SelectedCategory">
+                <option value="">📂 كل التصنيفات</option>
+                @foreach (var cat in uniqueCategories)
+                {
+                    <option value="@cat">@cat</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var prod in filteredProducts)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 position-relative" style="cursor: pointer;" @onclick="() => NavigateToDetails(prod.Id)">
+                    <img src="@GetImage(prod)" class="card-img-top" style="height: 200px; object-fit: cover;" />
+
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-primary fw-bold">@prod.Name</h5>
+                        <p class="card-text text-muted">
+                            💰 شراء: @prod.LastPurchasePrice<br />
+                            🏷️ جملة: @prod.Price1<br />
+                            🛍️ قطاعي: @prod.Price2
+                        </p>
+                    </div>
+
+                    <div class="dropdown position-absolute top-0 end-0 m-2" @onclick:stopPropagation>
+                        <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/products/edit/@prod.Id">✏️ تعديل</a></li>
+                            <li><a class="dropdown-item" href="#" @onclick="() => DeleteProduct(prod.Id)">🗑️ حذف</a></li>
+                            <li><a class="dropdown-item" href="#" @onclick="() => ToggleVisibility(prod.Id)">🙈 إخفاء</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+}
 
 @code {
     List<ProductSearchDto> products = new();
+    List<ProductSearchDto> filteredProducts = new();
+    HashSet<string> uniqueCategories = new();
+
+    bool isLoading = true;
+
+    string searchTerm = "";
+    string selectedCategory = "";
+
+    string SearchTerm
+    {
+        get => searchTerm;
+        set
+        {
+            searchTerm = value;
+            ApplyFilters();
+        }
+    }
+
+    string SelectedCategory
+    {
+        get => selectedCategory;
+        set
+        {
+            selectedCategory = value;
+            ApplyFilters();
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
+        isLoading = true;
         products = await Http.GetFromJsonAsync<List<ProductSearchDto>>("api/Product/GetAll");
+
+        uniqueCategories = products
+            .Select(p => p.CatogryName)
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .ToHashSet();
+
+        ApplyFilters();
+        isLoading = false;
+    }
+
+    void ApplyFilters()
+    {
+        filteredProducts = products
+            .Where(p =>
+                (string.IsNullOrWhiteSpace(SearchTerm) || p.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrWhiteSpace(SelectedCategory) || p.CatogryName == SelectedCategory)
+            )
+            .ToList();
+    }
+
+    void NavigateToDetails(int id)
+    {
+        NavManager.NavigateTo($"/products/details/{id}");
+    }
+
+    void DeleteProduct(int id)
+    {
+        // هنا تضيف كود الحذف
+    }
+
+    void ToggleVisibility(int id)
+    {
+        // هنا تضيف كود إخفاء المنتج
+    }
+
+    string GetImage(ProductSearchDto prod)
+    {
+        return !string.IsNullOrEmpty(prod.ThumbnailImageBase64?.Thumbnail)
+            ? $"data:{prod.ThumbnailImageBase64.ContentType};base64,{prod.ThumbnailImageBase64.Thumbnail}"
+            : "images/no-image.png"; // صورة افتراضية لو مش موجودة
     }
 }
