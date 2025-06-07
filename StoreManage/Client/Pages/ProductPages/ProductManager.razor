@@ -1,0 +1,299 @@
+﻿@page "/product-manager"
+@inject HttpClient Http
+
+<h3>إدارة المنتجات</h3>
+
+<EditForm Model="@productModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>الاسم:</label>
+        <InputText @bind-Value="productModel.Name" class="form-control" />
+    </div>
+    <div>
+        <label>الباركود:</label>
+        <InputText @bind-Value="productModel.Barcode" class="form-control" />
+    </div>
+    <div>
+        <label>الوصف:</label>
+        <InputTextArea @bind-Value="productModel.Details" class="form-control" />
+    </div>
+    <div>
+        <label>المخزون الابتدائي:</label>
+        <InputNumber @bind-Value="productModel.StartStock" class="form-control" />
+    </div>
+    <div>
+        <label>سعر الشراء الأخير:</label>
+        <InputNumber @bind-Value="productModel.LastPurchasePrice" class="form-control" />
+    </div>
+    <div>
+        <label>سعر البيع 1:</label>
+        <InputNumber @bind-Value="productModel.Price1" class="form-control" />
+    </div>
+    <div>
+        <label>سعر البيع 2:</label>
+        <InputNumber @bind-Value="productModel.Price2" class="form-control" />
+    </div>
+    <div>
+        <label>حد المخزون:</label>
+        <InputNumber @bind-Value="productModel.LimitStock" class="form-control" />
+    </div>
+    <div>
+        <label>معرف التصنيف:</label>
+        <InputNumber @bind-Value="productModel.CatogryId" class="form-control" />
+    </div>
+    <div>
+        <label>معرف الفرع:</label>
+        <InputNumber @bind-Value="productModel.BrancheId" class="form-control" />
+    </div>
+    <div>
+        <label>CustomId:</label>
+        <InputText @bind-Value="productModel.CustomId" class="form-control" />
+    </div>
+    <div>
+        <label>عرض في الفاتورة:</label>
+        <InputCheckbox @bind-Value="productModel.ShowInBill" />
+    </div>
+    <div>
+        <label>رفع صور المنتج:</label>
+        <InputFile OnChange="HandleImageUpload" multiple />
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">@((productModel.Id == 0) ? "إضافة" : "تعديل")</button>
+    <button type="button" class="btn btn-secondary mt-2" @onclick="ClearForm">جديد</button>
+</EditForm>
+
+@if (uploadedImages.Any())
+{
+    <div class="mt-2">
+        <b>الصور المرفوعة:</b>
+        @foreach (var img in uploadedImages)
+        {
+            <img src="@img" width="80" style="margin:5px" />
+        }
+    </div>
+}
+
+<hr />
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>الاسم</th>
+            <th>الباركود</th>
+            <th>السعر</th>
+            <th>الصور</th>
+            <th>إجراءات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var prod in products)
+        {
+            <tr>
+                <td>@prod.Name</td>
+                <td>@prod.Barcode</td>
+                <td>@prod.Price1</td>
+                <td>
+                    @if (prod.ProductImages != null)
+                    {
+                        @foreach (var img in prod.ProductImages)
+                        {
+                            <img src="data:@img.ContentType;base64,@Convert.ToBase64String(img.ImageData)" width="50" />
+                        }
+                    }
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-info" @onclick="() => EditProduct(prod)">تعديل</button>
+                    <button class="btn btn-sm btn-danger" @onclick="() => DeleteProduct(prod.Id)">حذف</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    // نموذج المنتج
+    ProductCreateDto productModel = new();
+    List<ProductSearchDto> products = new();
+    List<string> uploadedImages = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProducts();
+    }
+
+    async Task LoadProducts()
+    {
+        products = await Http.GetFromJsonAsync<List<ProductSearchDto>>("api/Product/GetAll");
+    }
+
+    async Task HandleValidSubmit()
+    {
+        if (productModel.Id == 0)
+        {
+            // إضافة منتج جديد
+            var response = await Http.PostAsJsonAsync("api/Product/AddProduct", productModel);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<AddProductResult>();
+                productModel.Id = result.product.Id;
+                await LoadProducts();
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            // تعديل منتج
+            var editDto = new ProductEditDto
+                {
+                    Name = productModel.Name,
+                    Details = productModel.Details,
+                    LastPurchasePrice = productModel.LastPurchasePrice,
+                    Price1 = productModel.Price1,
+                    Price2 = productModel.Price2,
+                    ShowInBill = productModel.ShowInBill
+                };
+            var response = await Http.PutAsJsonAsync($"api/Product/UpdateBasicProduct/{productModel.Id}", editDto);
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadProducts();
+                StateHasChanged();
+            }
+        }
+    }
+
+    async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles())
+        {
+            var content = new MultipartFormDataContent();
+            var stream = file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024);
+            content.Add(new StreamContent(stream), "image", file.Name);
+            content.Add(new StringContent(productModel.Id.ToString()), "productId");
+
+            var response = await Http.PostAsync("api/ProductImage/UploadSingleImage", content);
+            if (response.IsSuccessStatusCode)
+            {
+                // جلب الصور من جديد
+                await LoadProductImages(productModel.Id);
+            }
+        }
+    }
+
+    async Task LoadProductImages(int productId)
+    {
+        uploadedImages.Clear();
+        var response = await Http.GetAsync($"api/ProductImage/GetProductImagesBase64/{productId}");
+        if (response.IsSuccessStatusCode)
+        {
+            var images = await response.Content.ReadFromJsonAsync<List<ProductImageBase64Dto>>();
+            foreach (var img in images)
+            {
+                uploadedImages.Add(img.Base64);
+            }
+        }
+    }
+
+    void EditProduct(ProductSearchDto prod)
+    {
+        productModel = new ProductCreateDto
+            {
+                Id = prod.Id,
+                Name = prod.Name,
+                Barcode = prod.Barcode,
+                Details = prod.Details,
+                StartStock = prod.StartStock,
+                LastPurchasePrice = prod.LastPurchasePrice,
+                Price1 = prod.Price1,
+                Price2 = prod.Price2,
+                LimitStock = prod.LimitStock,
+                CatogryId = prod.CatogryId,
+                ShowInBill = prod.ShowInBill,
+                BrancheId = prod.BrancheId,
+                CustomId = prod.CustomId
+            };
+        _ = LoadProductImages(prod.Id);
+    }
+
+    async Task DeleteProduct(int id)
+    {
+        var response = await Http.DeleteAsync($"api/Product/DeleteProduct/{id}");
+        if (response.IsSuccessStatusCode)
+        {
+            await LoadProducts();
+        }
+    }
+
+    void ClearForm()
+    {
+        productModel = new();
+        uploadedImages.Clear();
+    }
+
+    // DTOs متوافقة مع الـ API
+    public class ProductCreateDto
+    {
+        public int Id { get; set; }
+        public string? Barcode { get; set; }
+        public string Name { get; set; }
+        public string? Details { get; set; }
+        public int StartStock { get; set; }
+        public double LastPurchasePrice { get; set; }
+        public double Price1 { get; set; }
+        public double Price2 { get; set; }
+        public int LimitStock { get; set; }
+        public int CatogryId { get; set; }
+        public bool ShowInBill { get; set; }
+        public int BrancheId { get; set; }
+        public string? CustomId { get; set; }
+    }
+
+    public class ProductEditDto
+    {
+        public string Name { get; set; }
+        public string? Details { get; set; }
+        public double LastPurchasePrice { get; set; }
+        public double Price1 { get; set; }
+        public double Price2 { get; set; }
+        public bool ShowInBill { get; set; }
+    }
+
+    public class ProductSearchDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Barcode { get; set; }
+        public string? Details { get; set; }
+        public int StartStock { get; set; }
+        public double LastPurchasePrice { get; set; }
+        public double Price1 { get; set; }
+        public double Price2 { get; set; }
+        public int LimitStock { get; set; }
+        public int CatogryId { get; set; }
+        public bool ShowInBill { get; set; }
+        public int BrancheId { get; set; }
+        public string? CustomId { get; set; }
+        public List<ProductImageDto>? ProductImages { get; set; }
+    }
+
+    public class ProductImageDto
+    {
+        public int Id { get; set; }
+        public string ImageName { get; set; }
+        public string ContentType { get; set; }
+        public byte[] ImageData { get; set; }
+    }
+
+    public class ProductImageBase64Dto
+    {
+        public int Id { get; set; }
+        public string ImageName { get; set; }
+        public string Base64 { get; set; }
+    }
+
+    public class AddProductResult
+    {
+        public string message { get; set; }
+        public ProductCreateDto product { get; set; }
+    }
+}

@@ -1,0 +1,41 @@
+﻿@page "/products"
+@using StoreManage.Shared.Dtos.ProductDtos;
+@inject HttpClient Http
+<h3>قائمة المنتجات</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>الاسم</th>
+            <th>الصورة المصغرة</th>
+            <th>إجراءات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var prod in products)
+        {
+            <tr>
+                <td>@prod.Name</td>
+                <td>
+                    @if (prod.ThumbnailImageBase64 != null && !string.IsNullOrEmpty(prod.ThumbnailImageBase64.Thumbnail))
+                    {
+                        <img src="data:@prod.ThumbnailImageBase64.ContentType;base64,@prod.ThumbnailImageBase64.Thumbnail" width="80" />
+                    }
+
+                </td>
+                <td>
+                    <a class="btn btn-info btn-sm" href="/products/details/@prod.Id">تفاصيل</a>
+                    <a class="btn btn-warning btn-sm" href="/products/edit/@prod.Id">تعديل</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<ProductSearchDto> products = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await Http.GetFromJsonAsync<List<ProductSearchDto>>("api/Product/GetAll");
+    }
+}

@@ -28,7 +28,7 @@ namespace StoreManage.Shared.Models
         public int BrancheId { get; set; }
         public string? CustomId { get; set; }
         public double Stock { get; set; }
-
+        public DateTime? LastUpdate { get; set; } = DateTime.Now;
         public virtual Branche Branche { get; set; } = null!;
         public virtual Catogry catogry { get; set; } = null!;
         public virtual ICollection<OrderBackDetail>? OrderBackDetails { get; set; }
