@@ -30,6 +30,16 @@ namespace StoreManage.Server.Controllers.ProductControllers
            
             return Ok(products.ToList().ToProductSearchDto());
         }
+         [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var include = new string[2];
+            include[0] = "ProductImages";
+            include[1] = "catogry";
+            var products = _unitOfWork.Product.Find(x=>x.Id == id, include);
+           
+            return Ok(products.ToProductDto());
+        }
 
 
         [HttpGet]

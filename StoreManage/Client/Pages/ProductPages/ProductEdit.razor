@@ -1,0 +1,183 @@
+﻿@page "/products/edit/{id:int}"
+@using StoreManage.Shared.Dtos.ProductDtos
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<h3>تعديل منتج</h3>
+
+@if (isLoading)
+{
+    <div class="alert alert-info">جاري تحميل بيانات المنتج...</div>
+}
+else if (productModel != null)
+{
+    <EditForm Model="@productModel" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-2">
+            <label>الاسم:</label>
+            <InputText @bind-Value="productModel.Name" class="form-control" />
+        </div>
+        <div class="mb-2">
+            <label>الوصف:</label>
+            <InputTextArea @bind-Value="productModel.Details" class="form-control" />
+        </div>
+        <div class="mb-2">
+            <label>سعر الشراء الأخير:</label>
+            <InputNumber @bind-Value="productModel.LastPurchasePrice" class="form-control" />
+        </div>
+        <div class="mb-2">
+            <label>سعر البيع 1:</label>
+            <InputNumber @bind-Value="productModel.Price1" class="form-control" />
+        </div>
+        <div class="mb-2">
+            <label>سعر البيع 2:</label>
+            <InputNumber @bind-Value="productModel.Price2" class="form-control" />
+        </div>
+        <div class="mb-2">
+            <label>عرض في الفاتورة:</label>
+            <InputCheckbox @bind-Value="productModel.ShowInBill" />
+        </div>
+
+        <div class="mb-2">
+            <label>رفع صورة أو عدة صور (jpg, jpeg, png, bmp, gif, tga, webp):</label>
+            <InputFile OnChange="HandleImageUpload" multiple accept=".jpg,.jpeg,.png,.bmp,.gif,.tga,.webp" />
+            @if (!string.IsNullOrEmpty(uploadError))
+            {
+                <div class="text-danger">@uploadError</div>
+            }
+        </div>
+
+        <div class="mb-2">
+            <b>الصور الحالية:</b>
+            <div>
+                @if (productImages.Any())
+                {
+                    @foreach (var img in productImages)
+                    {
+                        <img src="@img.Base64" width="80" style="margin:5px;border:1px solid #ccc" />
+                        <button type="button" class="btn btn-sm btn-danger" @onclick="() => DeleteImage(img.Id)">حذف</button>
+                    }
+                }
+                else
+                {
+                    <span class="text-muted">لا توجد صور</span>
+                }
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">حفظ التعديلات</button>
+        <button type="button" class="btn btn-secondary" @onclick='() => Nav.NavigateTo("/products")'>رجوع</button>
+
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+
+    ProductEditDto? productModel;
+    bool isLoading = true;
+    string uploadError = "";
+
+    List<ProductImageBase64Dto> productImages = new();
+
+    // الصيغ المدعومة
+    string[] allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tga", ".webp" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        // جلب بيانات المنتج
+        var prod = await Http.GetFromJsonAsync<ProductDto>($"api/Product/GetById/{id}");
+        if (prod != null)
+        {
+            productModel = new ProductEditDto
+            {
+                Name = prod.Name,
+                Details = prod.Details,
+                LastPurchasePrice = prod.LastPurchasePrice,
+                Price1 = prod.Price1,
+                Price2 = prod.Price2,
+                ShowInBill = prod.ShowInBill,
+               
+            };
+        }
+        // جلب الصور
+        await LoadProductImages();
+        isLoading = false;
+    }
+
+    async Task HandleValidSubmit()
+    {
+        var response = await Http.PutAsJsonAsync($"api/Product/UpdateBasicProduct/{id}", productModel);
+        if (response.IsSuccessStatusCode)
+        {
+            await JS.InvokeVoidAsync("alert", "تم حفظ التعديلات بنجاح");
+            Nav.NavigateTo("/products");
+        }
+    }
+
+    async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        uploadError = "";
+        foreach (var file in e.GetMultipleFiles())
+        {
+            var ext = System.IO.Path.GetExtension(file.Name).ToLower();
+            if (!allowedExtensions.Contains(ext))
+            {
+                uploadError = $"صيغة غير مدعومة: {ext}";
+                return;
+            }
+
+            var content = new MultipartFormDataContent();
+            var stream = file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024);
+            content.Add(new StreamContent(stream), "image", file.Name);
+            content.Add(new StringContent(id.ToString()), "productId");
+
+            var response = await Http.PostAsync("api/ProductImage/UploadSingleImage", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                uploadError = "فشل رفع الصورة.";
+                return;
+            }
+        }
+        await LoadProductImages();
+        StateHasChanged();
+    }
+
+    async Task LoadProductImages()
+    {
+        productImages.Clear();
+        var response = await Http.GetAsync($"api/ProductImage/GetProductImagesBase64/{id}");
+        if (response.IsSuccessStatusCode)
+        {
+            var images = await response.Content.ReadFromJsonAsync<List<ProductImageBase64Dto>>();
+            if (images != null)
+                productImages = images;
+        }
+    }
+
+    async Task DeleteImage(int imageId)
+    {
+        var confirmed = await JS.InvokeAsync<bool>("confirm", "هل أنت متأكد من حذف الصورة؟");
+        if (!confirmed)
+            return;
+
+        var response = await Http.DeleteAsync($"api/ProductImage/DeleteImage/{imageId}");
+        if (response.IsSuccessStatusCode)
+        {
+            await LoadProductImages();
+            StateHasChanged();
+        }
+    }
+
+    // DTO لعرض الصور
+    public class ProductImageBase64Dto
+    {
+        public int Id { get; set; }
+        public string ImageName { get; set; }
+        public string Base64 { get; set; }
+    }
+}

@@ -2,6 +2,8 @@
 @using StoreManage.Shared.Dtos.ProductDtos
 @inject HttpClient Http
 @inject NavigationManager NavManager
+@inject IJSRuntime JS
+@layout MainLayout
 
 <h3 class="text-center mb-4">🛒 قائمة المنتجات</h3>
 
@@ -34,10 +36,11 @@ else
         @foreach (var prod in filteredProducts)
         {
             <div class="col-md-4 mb-4">
-                <div class="card h-100 position-relative" style="cursor: pointer;" @onclick="() => NavigateToDetails(prod.Id)">
-                    <img src="@GetImage(prod)" class="card-img-top" style="height: 200px; object-fit: cover;" />
+                <div class="card h-100 position-relative">
+                    <img src="@GetImage(prod)" class="card-img-top" style="height: 200px; object-fit: cover; cursor:pointer"
+                         @onclick="() => NavigateToDetails(prod.Id)" />
 
-                    <div class="card-body text-center">
+                    <div class="card-body text-center" style="cursor:pointer" @onclick="() => NavigateToDetails(prod.Id)">
                         <h5 class="card-title text-primary fw-bold">@prod.Name</h5>
                         <p class="card-text text-muted">
                             💰 شراء: @prod.LastPurchasePrice<br />
@@ -46,15 +49,16 @@ else
                         </p>
                     </div>
 
-                    <div class="dropdown position-absolute top-0 end-0 m-2" @onclick:stopPropagation>
-                        <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-three-dots-vertical"></i>
+                    <div class="card-footer bg-white border-0 d-flex justify-content-center gap-2">
+                        <a class="btn btn-sm btn-info" href="/products/edit/@prod.Id">✏️ تعديل</a>
+                        <button type="button" class="btn btn-sm btn-danger"
+                                @onclick="async e => await DeleteProduct(prod.Id)">
+                            🗑️ حذف
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/products/edit/@prod.Id">✏️ تعديل</a></li>
-                            <li><a class="dropdown-item" href="#" @onclick="() => DeleteProduct(prod.Id)">🗑️ حذف</a></li>
-                            <li><a class="dropdown-item" href="#" @onclick="() => ToggleVisibility(prod.Id)">🙈 إخفاء</a></li>
-                        </ul>
+                        <button type="button" class="btn btn-sm btn-warning"
+                                @onclick="async e => await ToggleVisibility(prod.Id)">
+                            🙈 إخفاء
+                        </button>
                     </div>
                 </div>
             </div>
@@ -63,6 +67,7 @@ else
 }
 
 @code {
+
     List<ProductSearchDto> products = new();
     List<ProductSearchDto> filteredProducts = new();
     HashSet<string> uniqueCategories = new();
@@ -95,7 +100,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
-        products = await Http.GetFromJsonAsync<List<ProductSearchDto>>("api/Product/GetAll");
+        products = await Http.GetFromJsonAsync<List<ProductSearchDto>>("api/Product/GetAllShow");
 
         uniqueCategories = products
             .Select(p => p.CatogryName)
@@ -121,14 +126,40 @@ else
         NavManager.NavigateTo($"/products/details/{id}");
     }
 
-    void DeleteProduct(int id)
+    async Task DeleteProduct(int id)
     {
-        // هنا تضيف كود الحذف
+        var confirmed = await JS.InvokeAsync<bool>("confirm", "هل أنت متأكد من حذف المنتج؟");
+        if (!confirmed)
+            return;
+
+        var response = await Http.DeleteAsync($"api/Product/DeleteProduct/{id}");
+        if (response.IsSuccessStatusCode)
+        {
+            var prod = products.FirstOrDefault(p => p.Id == id);
+            if (prod != null)
+                products.Remove(prod);
+
+            ApplyFilters();
+            StateHasChanged();
+        }
     }
 
-    void ToggleVisibility(int id)
+    async Task ToggleVisibility(int id)
     {
-        // هنا تضيف كود إخفاء المنتج
+        var confirmed = await JS.InvokeAsync<bool>("confirm", "هل تريد إخفاء المنتج من الفاتورة؟");
+        if (!confirmed)
+            return;
+
+        var response = await Http.PutAsync($"api/Product/UpdateShowInBill/{id}", null);
+        if (response.IsSuccessStatusCode)
+        {
+            var prod = products.FirstOrDefault(p => p.Id == id);
+            if (prod != null)
+                products.Remove(prod);
+
+            ApplyFilters();
+            StateHasChanged();
+        }
     }
 
     string GetImage(ProductSearchDto prod)
@@ -138,3 +169,4 @@ else
             : "images/no-image.png"; // صورة افتراضية لو مش موجودة
     }
 }
+
