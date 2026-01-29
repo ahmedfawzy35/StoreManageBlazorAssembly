@@ -8,8 +8,16 @@ namespace StoreManage.Server.Data
     {
 
         // monstre asp account 
-        // 9583
+        // 9583  alfathstore.runasp.net
+        // 9581  alsakaphone.runasp.net
+
+        // publish profile
+        // publishUrl="site4671.siteasp.net" alfath
+
+        //publishUrl="site41834.siteasp.net" alsakka
+
         //http://alfathstore.runasp.net/api/Seller/Account/
+        //http://alsakaphone.runasp.net/api/Seller/Account/
         public AppDbContext()
         {
         }

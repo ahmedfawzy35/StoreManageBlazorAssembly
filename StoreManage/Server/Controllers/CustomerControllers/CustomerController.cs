@@ -52,6 +52,30 @@ namespace StoreManage.Server.Controllers.CustomerControllers
             var cus = _customer.Customer.FindAll(x => x.BrancheId == brancheId & !x.Archived, include);
             return Ok(cus.ToList().ToCustomerDto());
         }
+        // GET that accepts dates as strings and parses them (safer for querystring formats)
+        [HttpGet]
+        public async Task<IActionResult> GetAllCustomerOrdersForBranche([FromQuery] int brancheId, [FromQuery] string? dateFrom, [FromQuery] string? dateTo)
+        {
+            if (string.IsNullOrWhiteSpace(dateFrom) || string.IsNullOrWhiteSpace(dateTo))
+                return BadRequest("Missing dateFrom or dateTo. Use query params: ?brancheId=1&dateFrom=yyyy-MM-dd&dateTo=yyyy-MM-dd");
+
+            if (!DateTime.TryParse(dateFrom, out var from))
+                return BadRequest($"Invalid dateFrom: '{dateFrom}'. Use ISO (yyyy-MM-dd) or an ISO timestamp.");
+
+            if (!DateTime.TryParse(dateTo, out var to))
+                return BadRequest($"Invalid dateTo: '{dateTo}'. Use ISO (yyyy-MM-dd) or an ISO timestamp.");
+
+            try
+            {
+                var result = await _customer.Customer.GetAllCustomersOrderAsync(brancheId, from, to);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // لا تكشف استثناءات حساسة في الإنتاج — فقط للديباغ الآن
+                return StatusCode(500, new { message = "Server error", detail = ex.Message });
+            }
+        }
 
         [HttpGet]
         public IActionResult GetAllForBranche2([FromBody] GetCustometDto model)

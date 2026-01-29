@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using StoreManage.Client.Pages.CustomerPages;
 using StoreManage.Server.Data;
 using StoreManage.Server.Servicies.Interfacies.CustomerInterfacies;
+using StoreManage.Shared.Dtos;
 using StoreManage.Shared.Dtos.CustomerDato;
 using StoreManage.Shared.Models;
 using StoreManage.Shared.Utilitis;
+using System.Data;
 
 namespace StoreManage.Server.Servicies.Repositories.CustomerRepositories
 {
@@ -62,7 +65,63 @@ namespace StoreManage.Server.Servicies.Repositories.CustomerRepositories
 
 
         }
+        public async Task<List<CustomersOrdersDto>> GetAllCustomersOrderAsync(int brancheId , DateTime dateFrom , DateTime dateTo)
+        {
+            // جلب البيانات من ال DbContext (صححنا الـ & إلى &&)
+            // استبعاد العميل الافتراضي "عميل نقدي" مباشرة عن طريق الاسم
+            var customers = await _context.Customers
+                .Where(x => x.BrancheId == brancheId && x.Name != "عميل نقدي" && !x.Archived)
+                .ToListAsync();
 
+
+            // جلب الطلبيات مع استبعاد "عميل نقدي" وحساب الفترة
+            var allOrders = await _context.Orders
+                .Include(o => o.Customer)
+                .Where(x => x.BrancheId == brancheId
+                            && x.Customer.Name != "عميل نقدي"
+                            && !x.Customer.Archived
+                            && x.Date.Date >= dateFrom.Date
+                            && x.Date.Date <= dateTo.Date)
+                .ToListAsync();
+
+            var allOrdersBack = await _context.OrderBacks
+                .Include(o => o.Customer)
+                .Where(x => x.BrancheId == brancheId
+                            && x.Customer.Name != "عميل نقدي"
+                            && !x.Customer.Archived
+                            && x.Date.Date >= dateFrom.Date
+                            && x.Date.Date <= dateTo.Date)
+                .ToListAsync();
+
+            customers = customers.OrderByDescending(c => c.CustomerAccount).ToList();
+            var result = new List<CustomersOrdersDto>();
+            int count = 1;
+            foreach (var element in customers)
+            {
+                var totalOrders = allOrders.Where(x => x.CustomerId == element.Id && !x.IsDeleted == true && x.Date.Date >= dateFrom.Date && x.Date.Date <= dateTo.Date).Sum(o => o.Total);
+                var ordersCash = allOrders.Where(x => x.CustomerId == element.Id && !x.IsDeleted == true && x.Date.Date >= dateFrom.Date && x.Date.Date <= dateTo.Date).Sum(o => o.Paid);
+                var ordersUnCash = allOrders.Where(x => x.CustomerId == element.Id && !x.IsDeleted == true && x.Date.Date >= dateFrom.Date && x.Date.Date <= dateTo.Date).Sum(o => o.RemainingAmount);
+                var orderBacks = allOrdersBack.Where(x => x.CustomerId == element.Id && !x.IsDeleted == true && x.Date.Date >= dateFrom.Date && x.Date.Date <= dateTo.Date).Sum(o => o.Total);
+                var orders = totalOrders - orderBacks;
+
+                
+
+                result.Add(new CustomersOrdersDto
+                {
+                    CustomerId = element.Id,
+                    Number = count++,
+                    Name = element.Name,
+                    TotalCashOrders = ordersCash,
+                    TotalUnCashOrders = ordersUnCash,
+                    TotalOrdersBack = orderBacks
+                });
+              
+            }
+            var orderedRows = result.OrderByDescending(r => r.FinalOrders).ToList();
+           
+
+            return orderedRows;
+        }
         public async Task<CustomerAccountDto> GetCustomerAccount(int id, DateTime dateFrom, DateTime dateTo, bool showCashOrders = false)
         {
             // Get customer

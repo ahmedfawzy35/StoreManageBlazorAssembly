@@ -9,6 +9,7 @@ namespace StoreManage.Server.Servicies.Interfacies.CustomerInterfacies
         public CustomerAddDto Edit(CustomerAddDto entity);
 
         public Task<CustomerAccountDto> GetCustomerAccount(int id, DateTime dateFrom, DateTime dateTo, bool showCashOrders = false);
+        public Task<List<CustomersOrdersDto>> GetAllCustomersOrderAsync(int brancheId, DateTime dateFrom, DateTime dateTo);
 
     }
 }
