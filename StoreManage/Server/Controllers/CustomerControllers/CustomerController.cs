@@ -44,12 +44,15 @@ namespace StoreManage.Server.Controllers.CustomerControllers
         }
 
         [HttpGet("{branchId}")]
-        public IActionResult GetAllForBranche(int brancheId)
+        public IActionResult GetAllForBranche(int branchId)
         {
             var include = new string[2];
             include[0] = "Branche";
             include[1] = "Customertype";
-            var cus = _customer.Customer.FindAll(x => x.BrancheId == brancheId & !x.Archived, include);
+            var cus = _customer.Customer.FindAll(x => x.BrancheId == branchId && !x.Archived, include);
+            var cuss =new  List<CustomerDto>();
+           
+          
             return Ok(cus.ToList().ToCustomerDto());
         }
         // GET that accepts dates as strings and parses them (safer for querystring formats)

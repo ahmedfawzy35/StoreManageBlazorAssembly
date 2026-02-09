@@ -18,15 +18,15 @@ namespace StoreManage.Shared.Utilitis.Extentions
                 data.Add(new CustomerDto
                 {
                     Id = item.Id,
-                    Name = item.Name,   
+                    Name = item.Name,
                     Adress = item.Adress,
                     BrancheId = item.BrancheId,
-                    BrancheName = item.Branche is null ?"" : item.Branche.Name,
+                    BrancheName = item.Branche is null ? "" : item.Branche.Name,
                     CustomertypeId = item.CustomertypeId,
-                    CustomerTypeName =item.Customertype is null ? "" : item.Customertype.Name,
+                    CustomerTypeName = item.Customertype is null ? "" : item.Customertype.Name,
                     StartAccount = item.StartAccount,
                     StopDealing = item.StopDealing,
-                    CustomerAccount = item.CustomerAccount
+                    CustomerAccount = item.CustomerAccount == null ? 0 : item.CustomerAccount
                 });
             }
             return data;
