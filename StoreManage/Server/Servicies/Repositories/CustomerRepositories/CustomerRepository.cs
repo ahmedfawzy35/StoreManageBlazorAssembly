@@ -131,13 +131,13 @@ namespace StoreManage.Server.Servicies.Repositories.CustomerRepositories
             // get elements
 
             //1- get orders
-            var orders = await _orderRepository.FindAllAsync(o => o.CustomerId == customer.Id && o.Date >= dateFrom && o.Date <= dateTo);
+            var orders = await _orderRepository.FindAllAsync(o => o.CustomerId == customer.Id && o.IsDeleted == false && o.Date >= dateFrom && o.Date <= dateTo);
 
             //2- get order Back
-            var ordersBack = await _orderBackRepository.FindAllAsync(o => o.CustomerId == customer.Id && o.Date >= dateFrom && o.Date <= dateTo);
+            var ordersBack = await _orderBackRepository.FindAllAsync(o => o.CustomerId == customer.Id && o.IsDeleted == false && o.Date >= dateFrom && o.Date <= dateTo);
 
             //3- get cash In From Customer
-            var cashInFromCustomer = await _cashInFromCustomerRepository.FindAllAsync(o => o.CustomerId == customer.Id && o.Date >= dateFrom && o.Date <= dateTo);
+            var cashInFromCustomer = await _cashInFromCustomerRepository.FindAllAsync(o => o.CustomerId == customer.Id && o.IsDeleted == false && o.Date >= dateFrom && o.Date <= dateTo);
 
             //4- get customer AddingSettlements
             var customerAddingSettlements = await _customerAddingSettlementRepository.FindAllAsync(o => o.CustomerId == customer.Id && o.Date >= dateFrom && o.Date <= dateTo);

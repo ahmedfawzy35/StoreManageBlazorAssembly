@@ -30,12 +30,14 @@ namespace StoreManage.Server.Servicies.Repositories.SellerRepositories
         public SellerAddDto Add(SellerAddDto entity)
         {
             var sel = new Seller();
+
             sel.Name = entity.Name;
             sel.Adress = entity.Adress;
             sel.BrancheId = entity.BrancheId;
             sel.StartAccount = entity.StartAccount;
 
             _context.Sellers.Add(sel);
+           
             return entity;
 
 
@@ -57,6 +59,12 @@ namespace StoreManage.Server.Servicies.Repositories.SellerRepositories
 
 
 
+        }
+
+        public  List<SellerAddDto> GetAllForBranche(int BrancheId)
+        {
+          
+            return _context.Sellers.Where(x => x.BrancheId == BrancheId).Select(s => new SellerAddDto { Id = s.Id, Name = s.Name, Adress = s.Adress, BrancheId = s.BrancheId, StartAccount = s.StartAccount }).ToList();
         }
 
         public async Task<SellerAccountDto> GetSellerAccount(int id, DateTime dateFrom, DateTime dateTo, bool showCashOrders = false)

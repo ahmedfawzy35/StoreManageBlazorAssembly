@@ -2,6 +2,7 @@
 using StoreManage.Server.Servicies.Interfacies.OrderInterfacies;
 using StoreManage.Server.Servicies.Interfacies.PurchaseInterfacies;
 using StoreManage.Server.Servicies.Interfacies.SellerInterfacies;
+using StoreManage.Server.Servicies.Interfacies.StatisticIntergacies;
 using StoreManage.Server.Servicies.Interfacies.UserInterfacies;
 using StoreManage.Shared.Models;
 
@@ -69,6 +70,11 @@ namespace StoreManage.Server.Servicies.Interfacies
         IBaseRepository<EmployeePenalty> EmployeePenalty { get; }
         IBaseRepository<EmployeeReward> EmployeeReward { get; }
 
+        #endregion
+
+
+        #region statistics
+        IStatisticsRepository Statistics { get; }
         #endregion
         int Complete();
     }

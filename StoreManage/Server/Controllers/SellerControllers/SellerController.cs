@@ -32,6 +32,14 @@ namespace StoreManage.Server.Controllers.SellerControllers
             var cus = _seller.Seller.GetById(id);
             return Ok(cus);
         }
+
+        // GET api/<CustomerController>/5
+        [HttpGet("{branchId}")]
+        public IActionResult GetAllForBranche(int branchId)
+        {
+            var cus = _seller.Seller.GetAllForBranche(branchId);
+            return Ok(cus);
+        }
         // GET api/<CustomerController>/5
         [HttpGet]
         public async Task<IActionResult> Search([FromBody] string name)
@@ -42,7 +50,7 @@ namespace StoreManage.Server.Controllers.SellerControllers
         [HttpGet]
         public async Task<IActionResult> Account([FromBody] int id)
         {
-            var customerAccount = await _seller.Seller.GetSellerAccount(id, DateTime.Now.AddYears(-2), DateTime.Now, false);
+            var customerAccount = await _seller.Seller.GetSellerAccount(id, DateTime.Now.AddYears(-7), DateTime.Now, false);
             return Ok(customerAccount);
         }
 

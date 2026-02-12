@@ -75,8 +75,9 @@ namespace StoreManage.Server.Controllers.OrderControllers
                 try
                 {
                     myorder = await _orderBack.OrderBack.AddAsync(myorder);
-                    model.Id = myorder.Id;
                     _orderBack.Complete();
+                    model.Id = myorder.Id;
+                    
                     return Ok(model);
                 }
                 catch (Exception)

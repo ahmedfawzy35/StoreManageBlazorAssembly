@@ -19,7 +19,7 @@ namespace StoreManage.Server.Controllers.SellerControllers
             _UnitOfWork = UnitOfWork;
         }
 
-        // GET: api/<CustomerController>
+        // GET: api/<SellerDiscountSettlementController>
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -85,7 +85,7 @@ namespace StoreManage.Server.Controllers.SellerControllers
         }
 
         [HttpPut()]
-        public IActionResult Edit([FromBody] SellerAddingSettlementDto model)
+        public IActionResult Edit([FromBody] SellerDiscountSettlementDto model)
         {
 
             if (ModelState.IsValid)

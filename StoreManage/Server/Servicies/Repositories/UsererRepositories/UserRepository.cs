@@ -24,6 +24,11 @@ namespace StoreManage.Server.Servicies.Repositories.UsererRepositories
             var user = await _userRepository.FindAsync(x => x.UserName == entity.UserName && x.Password == entity.Password);
             if (user != null && user.Enabled)
             {
+                if (user.IsDeleted == true)
+                {
+                    login.errorMessage = "خطأ بإسم المستخد او كلمة المرور";
+                    return login;
+                }
                 var allBranches = await _context.Branches.ToListAsync();
                 var userRoles = await _context.UserRoles.Where(x => x.UserId == user.Id).ToListAsync();
                 var userBranches = await _context.UserBranches.Include(b => b.Branche).Where(x => x.UserId == user.Id).ToListAsync();

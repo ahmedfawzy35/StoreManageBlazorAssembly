@@ -4,11 +4,13 @@ using StoreManage.Server.Servicies.Interfacies.CustomerInterfacies;
 using StoreManage.Server.Servicies.Interfacies.OrderInterfacies;
 using StoreManage.Server.Servicies.Interfacies.PurchaseInterfacies;
 using StoreManage.Server.Servicies.Interfacies.SellerInterfacies;
+using StoreManage.Server.Servicies.Interfacies.StatisticIntergacies;
 using StoreManage.Server.Servicies.Interfacies.UserInterfacies;
 using StoreManage.Server.Servicies.Repositories.CustomerRepositories;
 using StoreManage.Server.Servicies.Repositories.OrderRepositories;
 using StoreManage.Server.Servicies.Repositories.PurchaseRepositories;
 using StoreManage.Server.Servicies.Repositories.SellerRepositories;
+using StoreManage.Server.Servicies.Repositories.StatisticRepositories;
 using StoreManage.Server.Servicies.Repositories.UsererRepositories;
 using StoreManage.Shared.Models;
 
@@ -81,6 +83,8 @@ namespace StoreManage.Server.Servicies.Repositories
 
         public IBaseRepository<EmployeeReward> EmployeeReward  { get; private set; }
 
+        public IStatisticsRepository Statistics { get; private set; }
+
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
@@ -149,8 +153,9 @@ namespace StoreManage.Server.Servicies.Repositories
         EmployeePenalty = new BaseRepository<EmployeePenalty>(_context);
 
         EmployeeReward = new BaseRepository<EmployeeReward>(_context);
+            Statistics = new StatisticRepository(_context);
 
-    }
+        }
 
         public int Complete()
         {

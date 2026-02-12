@@ -78,7 +78,7 @@ namespace StoreManage.Server.Controllers.CustomerControllers
 
                 _UnitOfWork.CustomerAddingSettlement.Add(cas);
                 _UnitOfWork.Complete();
-
+                model.Id = cas.Id;
                 return Ok(model);
             }
             return BadRequest("the model is not valid");

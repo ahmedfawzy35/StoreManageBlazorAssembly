@@ -8,6 +8,7 @@ namespace StoreManage.Server.Servicies.Interfacies.SellerInterfacies
     {
         public SellerAddDto Add(SellerAddDto entity);
         public SellerAddDto Edit(SellerAddDto entity);
+        public List<SellerAddDto> GetAllForBranche(int BrancheId);
 
         public Task<SellerAccountDto> GetSellerAccount(int id, DateTime dateFrom, DateTime dateTo, bool showCashOrders = false);
 

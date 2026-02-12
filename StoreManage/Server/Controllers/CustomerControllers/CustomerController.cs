@@ -123,7 +123,7 @@ namespace StoreManage.Server.Controllers.CustomerControllers
         [HttpGet]
         public async Task<IActionResult> Account([FromBody] int id)
         {
-            var customerAccount = await _customer.Customer.GetCustomerAccount(id, DateTime.Now.AddYears(-2), DateTime.Now, false);
+            var customerAccount = await _customer.Customer.GetCustomerAccount(id, DateTime.Now.AddYears(-10), DateTime.Now, false);
             return Ok(customerAccount);
         }
 

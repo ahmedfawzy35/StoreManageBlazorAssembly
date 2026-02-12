@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreManage.Server.Servicies.Interfacies;
-using StoreManage.Shared.Dtos.CustomerDato.CustomerSettlementDtos;
 using StoreManage.Shared.Dtos.SellerDato.SellerSettlementDtos;
 using StoreManage.Shared.Models;
 
@@ -19,7 +18,7 @@ namespace StoreManage.Server.Controllers.SellerControllers
             _UnitOfWork = UnitOfWork;
         }
 
-        // GET: api/<CustomerController>
+        // GET: api/<SellerController>
 
         [HttpGet]
         public IActionResult GetAll()
