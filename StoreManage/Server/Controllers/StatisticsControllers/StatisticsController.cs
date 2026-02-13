@@ -21,9 +21,10 @@ namespace StoreManage.Server.Controllers.StatisticsControllers
 
 
         [HttpGet]
-        public IActionResult GetDaySimpleStatistic([FromBody] DayDto date)
+        public async Task<IActionResult> GetDaySimpleStatistic([FromBody] DayDto date)
         {
-            return Ok(_unitOfWork.Order.GetAllOrders(date.BrancheId));
+            var result = await _unitOfWork.Statistics.GetDaySimpleStatisticForBranche(date);
+            return Ok( result);
         }
 
     }

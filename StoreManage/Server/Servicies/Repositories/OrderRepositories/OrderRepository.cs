@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StoreManage.Server.Data;
 using StoreManage.Server.Servicies.Interfacies.OrderInterfacies;
+using StoreManage.Shared.Dtos;
 using StoreManage.Shared.Dtos.OrderDtos;
+using StoreManage.Shared.Dtos.StatisticsDtos;
 using StoreManage.Shared.Models;
 
 namespace StoreManage.Server.Servicies.Repositories.OrderRepositories
@@ -13,7 +15,131 @@ namespace StoreManage.Server.Servicies.Repositories.OrderRepositories
         {
             _mycontext = context;
         }
+        public async Task<DayStatisticDto> GetDaySimpleStatisticForBranche(DayDto day)
+        {
 
+            DayStatisticDto dayStatisticDto = new DayStatisticDto();
+            dayStatisticDto.Day = day.Date.Date;
+            var orders = await _mycontext.Orders
+                .Where(o => o.Date.Date == day.Date.Date && o.BrancheId == day.BrancheId)
+                .SumAsync(x => x.Total);
+
+            var purchases = await _mycontext.Purchases
+                .Where(p => p.Date.Date == day.Date.Date && p.BrancheId == day.BrancheId)
+                .SumAsync(x => x.Total - x.Discount);
+
+            var ordersBack = await _mycontext.OrderBacks
+                .Where(o => o.Date.Date == day.Date.Date && o.BrancheId == day.BrancheId)
+                .SumAsync(x => x.Total - x.Discount);
+
+            var purchasesBack = await _mycontext.PurchaseBacks
+                .Where(p => p.Date.Date == day.Date.Date && p.BrancheId == day.BrancheId)
+                .SumAsync(x => x.Total - x.Discount);
+
+            var cashOrders = await _mycontext.Orders
+                .Where(o => o.Date.Date == day.Date.Date && o.BrancheId == day.BrancheId && o.RemainingAmount == 0)
+                .SumAsync(x => x.Paid);
+
+            var cashPurchases = await _mycontext.Purchases
+                .Where(p => p.Date.Date == day.Date.Date && p.BrancheId == day.BrancheId && p.RemainingAmount == 0)
+                .SumAsync(x => x.Paid);
+
+            var cashOrdersBack = await _mycontext.OrderBacks
+                .Where(o => o.Date.Date == day.Date.Date && o.BrancheId == day.BrancheId && o.RemainingAmount == 0)
+                .SumAsync(x => x.Paid);
+
+            var cashPurchasesBack = await _mycontext.PurchaseBacks
+                .Where(p => p.Date.Date == day.Date.Date && p.BrancheId == day.BrancheId && p.RemainingAmount == 0)
+                .SumAsync(x => x.Paid);
+
+            var productCountSoled = await _mycontext.OrderDetails
+                .Include(od => od.Order)
+                .Where(od => od.Order.Date.Date == day.Date.Date && od.Order.BrancheId == day.BrancheId)
+                .SumAsync(od => od.Qte);
+
+            var productCostSoled = await _mycontext.OrderDetails
+                .Include(od => od.Order)
+                .Include(od => od.Product)
+                .Where(od => od.Order.Date.Date == day.Date.Date && od.Order.BrancheId == day.BrancheId && od.Product != null)
+                .SumAsync(od => (double)od.Qte * od.Product.LastPurchasePrice);
+
+            var cashInFromBankAccount = await _mycontext.CashInFromBankAccounts
+                .Where(cf => cf.Date.Date == day.Date.Date && cf.BrancheId == day.BrancheId)
+                .SumAsync(cf => cf.Value);
+
+            var cashInFromBrancheMoneySafe = await _mycontext.CashInFromBrancheMoneySaves
+                .Where(cf => cf.Date.Date == day.Date.Date && cf.BrancheId == day.BrancheId)
+                .SumAsync(cf => cf.Value);
+
+            var cashInFromCustomer = await _mycontext.CashInFromCustomers
+                .Where(cf => cf.Date.Date == day.Date.Date && cf.BrancheId == day.BrancheId)
+                .SumAsync(cf => cf.Value);
+
+            var cashInFromIncome = await _mycontext.CashInFromIncomes
+                .Where(cf => cf.Date.Date == day.Date.Date && cf.BrancheId == day.BrancheId)
+                .SumAsync(cf => cf.Value);
+
+            var cashInFromMasterMoneySafe = await _mycontext.CashInFromMasterMoneySaves
+                .Where(cf => cf.Date.Date == day.Date.Date && cf.BrancheId == day.BrancheId)
+                .SumAsync(cf => cf.Value);
+
+            var cashOutToAdvancepaymentOfSalary = await _mycontext.CashOutToAdvancepaymentOfSalaries
+                .Where(cf => cf.Date.Date == day.Date.Date && cf.BrancheId == day.BrancheId)
+                .SumAsync(cf => cf.Value);
+
+            var cashOutToBankAccount = await _mycontext.CashOutToBankAccounts
+                .Where(cf => cf.Date.Date == day.Date.Date && cf.BrancheId == day.BrancheId)
+                .SumAsync(cf => cf.Value);
+
+            var cashOutToBrancheMoneySafe = await _mycontext.CashOutToBrancheMoneySaves
+                .Where(cf => cf.Date.Date == day.Date.Date && cf.BrancheId == day.BrancheId)
+                .SumAsync(cf => cf.Value);
+
+            var cashOutToMasterMoneySafe = await _mycontext.CashOutToMasterMoneySaves
+                .Where(cf => cf.Date.Date == day.Date.Date && cf.BrancheId == day.BrancheId)
+                .SumAsync(cf => cf.Value);
+
+            var cashOutToOutGoing = await _mycontext.CashOutToOutGoings
+                .Where(cf => cf.Date.Date == day.Date.Date && cf.BrancheId == day.BrancheId)
+                .SumAsync(cf => cf.Value);
+
+            var cashOutToSalary = await _mycontext.CashOutToSalaries
+                .Where(cf => cf.Date.Date == day.Date.Date && cf.BrancheId == day.BrancheId)
+                .SumAsync(cf => cf.Value);
+
+            var cashOutToSeller = await _mycontext.CashOutToSellers
+                .Where(cf => cf.Date.Date == day.Date.Date && cf.BrancheId == day.BrancheId)
+                .SumAsync(cf => cf.Value);
+
+            // Assign computed values to DTO (property names assumed; adjust if DTO properties differ)
+           // dayStatisticDto.Day = day.Date;
+            dayStatisticDto.TotalOrders = orders;
+            dayStatisticDto.TotalPurchases = purchases;
+            dayStatisticDto.TotalOrdersBack = ordersBack;
+            dayStatisticDto.TotalPurchasesBack = purchasesBack;
+            dayStatisticDto.CashOrders = cashOrders;
+            dayStatisticDto.CashPurchases = cashPurchases;
+            dayStatisticDto.CashOrdersBack = cashOrdersBack;
+            dayStatisticDto.CashPurchasesBack = cashPurchasesBack;
+            dayStatisticDto.ProductCountSoled = productCountSoled;
+            dayStatisticDto.ProductCostSoled = productCostSoled;
+
+            dayStatisticDto.CashInFromBankAccount = cashInFromBankAccount;
+            dayStatisticDto.CashInFromBrancheMoneySafe = cashInFromBrancheMoneySafe;
+            dayStatisticDto.CashInFromCustomer = cashInFromCustomer;
+            dayStatisticDto.CashInFromIncome = cashInFromIncome;
+            dayStatisticDto.CashInFromMasterMoneySafe = cashInFromMasterMoneySafe;
+
+            dayStatisticDto.CashOutToAdvancepaymentOfSalary = cashOutToAdvancepaymentOfSalary;
+            dayStatisticDto.CashOutToBankAccount = cashOutToBankAccount;
+            dayStatisticDto.CashOutToBrancheMoneySafe = cashOutToBrancheMoneySafe;
+            dayStatisticDto.CashOutToMasterMoneySafe = cashOutToMasterMoneySafe;
+            dayStatisticDto.CashOutToOutGoing = cashOutToOutGoing;
+            dayStatisticDto.CashOutToSalary = cashOutToSalary;
+            dayStatisticDto.CashOutToSeller = cashOutToSeller;
+
+            return dayStatisticDto;
+        }
         public List<OrderDto> GetAllOrders(int brancheId)
         {
             var orders = _mycontext.Orders.Include(x => x.Customer).Where(x => x.BrancheId == brancheId).ToList();
