@@ -23,7 +23,7 @@ namespace StoreManage.Server.Controllers.StatisticsControllers
         [HttpGet]
         public IActionResult GetDaySimpleStatistic([FromBody] DayDto date)
         {
-            return Ok(_unitOfWork.Order.GetAllOrders(brancheId));
+            return Ok(_unitOfWork.Order.GetAllOrders(date.BrancheId));
         }
 
     }
