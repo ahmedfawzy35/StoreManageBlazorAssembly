@@ -97,7 +97,7 @@ namespace StoreManage.Server.Controllers.SellerControllers
             }
             _seller.Seller.Delete(cus);
             _seller.Complete();
-            return Ok();
+            return Ok("تم حذف المورد");
         }
 
     }
