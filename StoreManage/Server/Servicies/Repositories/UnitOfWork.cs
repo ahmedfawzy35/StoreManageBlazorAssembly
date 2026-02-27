@@ -1,12 +1,14 @@
 ﻿using StoreManage.Server.Data;
 using StoreManage.Server.Servicies.Interfacies;
 using StoreManage.Server.Servicies.Interfacies.CustomerInterfacies;
+using StoreManage.Server.Servicies.Interfacies.EmployeeInterfacies;
 using StoreManage.Server.Servicies.Interfacies.OrderInterfacies;
 using StoreManage.Server.Servicies.Interfacies.PurchaseInterfacies;
 using StoreManage.Server.Servicies.Interfacies.SellerInterfacies;
 using StoreManage.Server.Servicies.Interfacies.StatisticIntergacies;
 using StoreManage.Server.Servicies.Interfacies.UserInterfacies;
 using StoreManage.Server.Servicies.Repositories.CustomerRepositories;
+using StoreManage.Server.Servicies.Repositories.EmployeeRepositories;
 using StoreManage.Server.Servicies.Repositories.OrderRepositories;
 using StoreManage.Server.Servicies.Repositories.PurchaseRepositories;
 using StoreManage.Server.Servicies.Repositories.SellerRepositories;
@@ -73,7 +75,7 @@ namespace StoreManage.Server.Servicies.Repositories
 
         public IBaseRepository<InCome> InCome  { get; private set; }
 
-        public IBaseRepository<Employee> Employee  { get; private set; }
+        public IEmployeeRepository Employee { get; private set; }
 
         public IBaseRepository<EmployeeIncrease> EmployeeIncrease  { get; private set; }
 
@@ -144,7 +146,7 @@ namespace StoreManage.Server.Servicies.Repositories
 
         InCome = new BaseRepository<InCome>(_context);
 
-         Employee = new BaseRepository<Employee>(_context);
+         Employee = new EmployeeRepository(_context);
 
          EmployeeIncrease = new BaseRepository<EmployeeIncrease>(_context);
 

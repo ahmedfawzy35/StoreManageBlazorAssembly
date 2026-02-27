@@ -1,4 +1,5 @@
 ﻿using StoreManage.Server.Servicies.Interfacies.CustomerInterfacies;
+using StoreManage.Server.Servicies.Interfacies.EmployeeInterfacies;
 using StoreManage.Server.Servicies.Interfacies.OrderInterfacies;
 using StoreManage.Server.Servicies.Interfacies.PurchaseInterfacies;
 using StoreManage.Server.Servicies.Interfacies.SellerInterfacies;
@@ -64,7 +65,7 @@ namespace StoreManage.Server.Servicies.Interfacies
         IBaseRepository<InCome> InCome { get; }
 
         #region employee
-        IBaseRepository<Employee> Employee { get; }
+        IEmployeeRepository Employee { get; }
         IBaseRepository<EmployeeIncrease> EmployeeIncrease { get; }
         IBaseRepository<EmployeeLess> EmployeeLess { get; }
         IBaseRepository<EmployeePenalty> EmployeePenalty { get; }

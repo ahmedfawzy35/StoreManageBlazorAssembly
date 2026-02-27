@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreManage.Server.Servicies.Interfacies;
+using StoreManage.Shared.Dtos;
 using StoreManage.Shared.Dtos.CashDtos.CashInDtos;
 using StoreManage.Shared.Dtos.EmployeeDtos;
 using StoreManage.Shared.Models;
@@ -29,6 +30,15 @@ namespace StoreManage.Server.Controllers.EmployeeControllers
             return Ok(ToEmployeeDtos(ci.ToList()));
 
         }
+
+
+        [HttpGet]
+        public IActionResult GetCustomerMonthAccount([FromBody] EmployeeMonthAccountRequestDTO employee)
+        {
+            return Ok(_unitOfWork.Employee.GetCustomerMonthAccount(employee.EmployeeId, employee.Month, employee.Year));
+        }
+
+
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
 
